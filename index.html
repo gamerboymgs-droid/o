@@ -2,85 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DuPremier Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DuPremier FC</title>
+
+  <!-- Better font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
+      font-family: "Poppins", sans-serif;
+      background: #0b1220;
       color: white;
     }
 
-    header {
-      background: #111827;
-      padding: 15px 20px;
+    /* NAVBAR */
+    nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 15px 30px;
+      background: #0f172a;
+      position: sticky;
+      top: 0;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #60a5fa;
     }
 
     .logo {
-      font-weight: bold;
+      font-weight: 700;
       letter-spacing: 2px;
     }
 
-    .lang-btn {
-      background: #3b82f6;
-      border: none;
-      color: white;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
+    /* HERO */
     .hero {
       text-align: center;
-      padding: 60px 20px;
-      background: linear-gradient(to bottom right, #1e3a8a, #0f172a);
+      padding: 100px 20px;
+      background: linear-gradient(to bottom right, #1e3a8a, #0b1220);
     }
 
     .hero h1 {
-      font-size: 42px;
-      margin: 0;
+      font-size: 48px;
+      margin-bottom: 10px;
     }
 
     .hero p {
       opacity: 0.8;
+      max-width: 600px;
+      margin: auto;
     }
 
-    .section {
-      padding: 40px 20px;
-      text-align: center;
-    }
-
-    .grid {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
+    .btn {
       margin-top: 20px;
-    }
-
-    .card {
-      background: #1f2937;
-      padding: 20px;
-      border-radius: 12px;
-      width: 250px;
-      text-align: left;
-    }
-
-    .price {
-      color: #22c55e;
-      font-weight: bold;
+      display: inline-block;
+      padding: 12px 20px;
+      background: #3b82f6;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
     }
 
     footer {
       text-align: center;
       padding: 20px;
-      background: #111827;
-      font-size: 14px;
+      background: #0f172a;
+      margin-top: 50px;
+      font-size: 13px;
       opacity: 0.7;
     }
   </style>
@@ -88,82 +84,29 @@
 
 <body>
 
-  <header>
-    <div class="logo">DUPREMIER STORE</div>
-    <button class="lang-btn" onclick="toggleLang()">中文 / EN</button>
-  </header>
-
-  <div class="hero">
-    <h1 id="title">Premium Street Store</h1>
-    <p id="subtitle">Jerseys • Designer • Shoes — Clean, rare, and premium drops.</p>
-  </div>
-
-  <!-- JERSEYS -->
-  <div class="section">
-    <h2 id="cat1">Jerseys</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Real Madrid 24/25 Kit</h3>
-        <p>Player edition jersey, breathable fit.</p>
-        <p class="price">$49.99</p>
-      </div>
+  <!-- NAVIGATION -->
+  <nav aria-label="Main navigation">
+    <div class="logo">DUPREMIER FC</div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="jerseys.html">Jerseys</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
     </div>
-  </div>
+  </nav>
 
-  <!-- DESIGNER -->
-  <div class="section">
-    <h2 id="cat2">Designer</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Chrome Hearts Tee</h3>
-        <p>Heavy cotton luxury streetwear shirt.</p>
-        <p class="price">$89.99</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- SHOES -->
-  <div class="section">
-    <h2 id="cat3">Shoes</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Jordan 4 Retro</h3>
-        <p>Classic basketball sneaker, high demand.</p>
-        <p class="price">$129.99</p>
-      </div>
-    </div>
-  </div>
+  <!-- HERO -->
+  <main>
+    <section class="hero">
+      <h1>Build. Train. Dominate.</h1>
+      <p>A growing football club identity focused on development, discipline, and performance.</p>
+      <a class="btn" href="jerseys.html">View Jerseys</a>
+    </section>
+  </main>
 
   <footer>
-    © 2026 DuPremier Store
+    © 2026 DuPremier FC
   </footer>
-
-  <script>
-    let english = true;
-
-    function toggleLang() {
-      english = !english;
-
-      if (!english) {
-        document.getElementById("title").innerText = "高端街头商店";
-        document.getElementById("subtitle").innerText = "球衣 • 奢侈品 • 鞋子 — 简洁，高端，稀有商品";
-
-        document.getElementById("cat1").innerText = "球衣";
-        document.getElementById("cat2").innerText = "奢侈品";
-        document.getElementById("cat3").innerText = "鞋子";
-      } else {
-        document.getElementById("title").innerText = "Premium Street Store";
-        document.getElementById("subtitle").innerText = "Jerseys • Designer • Shoes — Clean, rare, and premium drops.";
-
-        document.getElementById("cat1").innerText = "Jerseys";
-        document.getElementById("cat2").innerText = "Designer";
-        document.getElementById("cat3").innerText = "Shoes";
-      }
-    }
-  </script>
-
-</body>
-</html>
 
 </body>
 </html>
