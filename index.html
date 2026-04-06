@@ -1,9 +1,127 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Website</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DuPremier FC</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+    }
+
+    header {
+      background: #111827;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+
+    .hero {
+      height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(to bottom right, #1e3a8a, #0f172a);
+      padding: 20px;
+    }
+
+    .hero h1 {
+      font-size: 50px;
+      margin: 0;
+    }
+
+    .hero p {
+      font-size: 18px;
+      opacity: 0.8;
+      max-width: 600px;
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: #3b82f6;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .section {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .cards {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: #1f2937;
+      padding: 20px;
+      border-radius: 12px;
+      width: 250px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #111827;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Hello, my site is live</h1>
+
+  <header>
+    DUPREMIER FC
+  </header>
+
+  <section class="hero">
+    <h1>Build. Train. Dominate.</h1>
+    <p>Welcome to DuPremier FC — a football project focused on growth, skill, and reaching the next level.</p>
+    <a class="btn" href="#about">Learn More</a>
+  </section>
+
+  <section class="section" id="about">
+    <h2>About Us</h2>
+    <p>We are building a competitive football identity from the ground up.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Training</h3>
+        <p>Daily skill development and physical improvement.</p>
+      </div>
+
+      <div class="card">
+        <h3>Team</h3>
+        <p>Building chemistry and competitive mentality.</p>
+      </div>
+
+      <div class="card">
+        <h3>Goals</h3>
+        <p>Progress into higher-level competitive football.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 DuPremier FC. All rights reserved.
+  </footer>
+
 </body>
 </html>
