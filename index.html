@@ -1,112 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DuPremier </title>
-
-  <!-- Better font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      background: #0b1220;
-      color: white;
-    }
-
-    /* NAVBAR */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      background: #0f172a;
-      position: sticky;
-      top: 0;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 10px;
-      font-weight: 500;
-    }
-
-    nav a:hover {
-      color: #60a5fa;
-    }
-
-    .logo {
-      font-weight: 700;
-      letter-spacing: 2px;
-    }
-
-    /* HERO */
-    .hero {
-      text-align: center;
-      padding: 100px 20px;
-      background: linear-gradient(to bottom right, #1e3a8a, #0b1220);
-    }
-
-    .hero h1 {
-      font-size: 48px;
-      margin-bottom: 10px;
-    }
-
-    .hero p {
-      opacity: 0.8;
-      max-width: 600px;
-      margin: auto;
-    }
-
-    .btn {
-      margin-top: 20px;
-      display: inline-block;
-      padding: 12px 20px;
-      background: #3b82f6;
-      border-radius: 8px;
-      color: white;
-      text-decoration: none;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #0f172a;
-      margin-top: 50px;
-      font-size: 13px;
-      opacity: 0.7;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pitch Threads</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+  <header class="hero">
+    <nav class="topbar">
+      <div class="brand">Pitch Threads</div>
+      <div class="nav-links">
+        <a href="jerseys.html">Shop</a>
+        <a href="jerseys.html">Featured</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </nav>
 
-  <!-- NAVIGATION -->
-  <nav aria-label="Main navigation">
-    <div class="logo">DUPREMIER </div>
-    <div>
-      <a href="index.html">Home</a>
-      <a href="jerseys.html">Jerseys</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
+    <div class="hero-content">
+      <p class="eyebrow">Elite soccer kits for every matchday</p>
+      <h1>See more for jerseys</h1>
+      <p class="hero-copy">
+        Discover premium soccer jerseys from top clubs and national teams, with bold designs, retro drops, and fan favorites ready for matchday.
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href="jerseys.html">See More</a>
+        <a class="button secondary" href="jerseys.html">Featured Kits</a>
+      </div>
     </div>
-  </nav>
 
-  <!-- HERO -->
+    <div class="hero-card">
+      <span class="card-label">This Week</span>
+      <h2>Champions Collection</h2>
+      <p>New season home kits, rare away jerseys, and retro legends inspired by the biggest nights in football.</p>
+      <a href="jerseys.html">Browse soccer jerseys</a>
+    </div>
+  </header>
+
   <main>
-    <section class="hero">
-      <h1>High Quality, Cheap Products.</h1>
-  
-      <a class="btn" href="jerseys.html">View Jerseys</a>
+    <section class="strip" id="featured">
+      <div>Official club looks</div>
+      <div>Fast U.S. shipping</div>
+      <div>Retro soccer classics</div>
+      <div>Limited matchday drops</div>
+    </section>
+
+    <section class="collection" id="collection">
+      <div class="section-heading">
+        <p class="eyebrow">Featured Soccer Jerseys</p>
+        <h2>Pick your club. Own the matchday look.</h2>
+      </div>
+
+      <div class="product-grid">
+        <article class="product-card">
+          <div class="product-art art-barca"></div>
+          <div class="product-info">
+            <div class="product-tag">Best Seller</div>
+            <h3>Barcelona Home Jersey</h3>
+            <p>Bold stripe styling with a clean modern finish inspired by classic Camp Nou nights.</p>
+            <div class="product-meta">
+              <span>$79</span>
+              <button>Add to cart</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-art art-madrid"></div>
+          <div class="product-info">
+            <div class="product-tag">New Arrival</div>
+            <h3>Real Madrid Away Jersey</h3>
+            <p>Minimal, sharp, and built for supporters who want an elite away-kit statement.</p>
+            <div class="product-meta">
+              <span>$84</span>
+              <button>Add to cart</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-art art-argentina"></div>
+          <div class="product-info">
+            <div class="product-tag">Fan Favorite</div>
+            <h3>Argentina National Team Jersey</h3>
+            <p>Sky blue tradition with a championship feel made for the biggest football stage.</p>
+            <div class="product-meta">
+              <span>$89</span>
+              <button>Add to cart</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="about-copy">
+        <p class="eyebrow">Why fans shop here</p>
+        <h2>A soccer store built around the jersey culture</h2>
+        <p>
+          Pitch Threads gives soccer fans a cleaner way to shop for club and country jerseys, with standout designs, smoother browsing, and a storefront that feels more premium than a generic template.
+        </p>
+      </div>
+
+      <div class="stats">
+        <div>
+          <strong>150+</strong>
+          <span>soccer jersey styles</span>
+        </div>
+        <div>
+          <strong>24h</strong>
+          <span>order processing time</span>
+        </div>
+        <div>
+          <strong>4.9/5</strong>
+          <span>supporter rating</span>
+        </div>
+      </div>
     </section>
   </main>
 
-  <footer>
-    © 2026 DuPremier
+  <footer class="footer" id="contact">
+    <div>
+      <h2>Pitch Threads</h2>
+      <p>Email: support@pitchthreads.com</p>
+    </div>
+    <a class="button primary" href="jerseys.html">See more for jerseys</a>
   </footer>
-
 </body>
 </html>
