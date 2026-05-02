@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acadence AI — Quiz</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div id="sidebar-mount"></div>
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">🧠 Practice Quiz</div>
+    <div class="page-sub">Test your knowledge across subjects</div>
+  </div>
+  <div class="page-content">
+    <div id="subject-pills" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap"></div>
+    <div id="quiz-area" style="max-width:580px"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+document.getElementById('sidebar-mount').innerHTML = buildSidebar('quiz');
+
+const QUIZZES = {
+  Science: [
+    {q:'How many ATP are directly produced in the Krebs cycle per glucose?', opts:['2','4','6','8'], ans:0, exp:'The Krebs cycle directly produces 2 ATP per glucose (1 per turn × 2 turns). Most ATP comes from NADH/FADH₂ in the electron transport chain.'},
+    {q:'Which organelle carries out photosynthesis?', opts:['Mitochondria','Ribosome','Chloroplast','Nucleus'], ans:2, exp:'Chloroplasts contain chlorophyll and are the site of photosynthesis in plant cells.'},
+    {q:'What is the monomer of DNA?', opts:['Amino acid','Nucleotide','Fatty acid','Glucose'], ans:1, exp:'DNA is made of nucleotides — each consisting of a deoxyribose sugar, a phosphate group, and a nitrogenous base.'},
+  ],
+  Math: [
+    {q:'What is ∫2x dx?', opts:['x + C','x² + C','2x² + C','x² − 1'], ans:1, exp:'∫2x dx = x² + C by the power rule: ∫xⁿ dx = xⁿ⁺¹/(n+1) + C.'},
+    {q:'What is the derivative of sin(x)?', opts:['cos(x)','-sin(x)','-cos(x)','tan(x)'], ans:0, exp:'d/dx[sin(x)] = cos(x). A fundamental trigonometric derivative.'},
+    {q:'What does the Fundamental Theorem of Calculus connect?', opts:['Limits and infinity','Derivatives and integrals','Algebra and geometry','Sequences and series'], ans:1, exp:'The FTC states that differentiation and integration are inverse operations, linking the two main branches of calculus.'},
+  ],
+  History: [
+    {q:'In which year did World War I begin?', opts:['1912','1914','1916','1918'], ans:1, exp:'WWI began in 1914, triggered by the assassination of Archduke Franz Ferdinand in Sarajevo, June 28, 1914.'},
+    {q:'What does MAIN stand for (WWI causes)?', opts:['Money, Army, Industry, Nationalism','Militarism, Alliances, Imperialism, Nationalism','Maps, Alliances, Imperialism, Navy','Militarism, Arms, Industry, Nationalism'], ans:1, exp:'MAIN = Militarism, Alliance systems, Imperialism, Nationalism — the four underlying causes of WWI.'},
+  ],
+  CS: [
+    {q:'What is the time complexity of binary search?', opts:['O(n)','O(n²)','O(log n)','O(1)'], ans:2, exp:'Binary search halves the search space each step → O(log n). Requires the array to be sorted.'},
+    {q:'Which data structure uses LIFO ordering?', opts:['Queue','Stack','Linked List','Heap'], ans:1, exp:'A Stack uses Last-In-First-Out (LIFO). Think of a stack of plates — you always take from the top.'},
+  ],
+  English: [
+    {q:'What literary device is "The fog comes on little cat feet"?', opts:['Simile','Metaphor','Personification','Alliteration'], ans:2, exp:'Personification — giving the fog animal-like qualities. From Carl Sandburg\'s poem "Fog".'},
+    {q:'What is the main theme of Hamlet?', opts:['Love and betrayal','Revenge and moral paralysis','War and heroism','Family and loyalty'], ans:1, exp:'Hamlet\'s central theme is revenge versus moral paralysis — Hamlet knows he must act but is crippled by overthinking.'},
+  ],
+};
+
+const subjects = Object.keys(QUIZZES);
+let activeSub = 'Science';
+let qi = 0, selected = null, score = 0, done = false;
+
+function setSubject(s) {
+  activeSub = s; qi = 0; selected = null; score = 0; done = false;
+  renderPills(); renderQuiz();
+}
+
+function renderPills() {
+  document.getElementById('subject-pills').innerHTML = subjects.map(s=>`
+    <button class="subject-pill ${activeSub===s?'active':''}" onclick="setSubject('${s}')">${s}</button>`).join('');
+}
+
+function renderQuiz() {
+  const qs = QUIZZES[activeSub];
+  const area = document.getElementById('quiz-area');
+
+  if (done) {
+    area.innerHTML = `
+      <div class="card" style="text-align:center;padding:40px">
+        <div style="font-size:48px;margin-bottom:12px">${score===qs.length?'🏆':'🎉'}</div>
+        <div style="font-family:var(--display);font-size:22px;font-weight:700;margin-bottom:8px">${score===qs.length?'Perfect!':'Nice work!'}</div>
+        <div style="font-size:15px;color:var(--text2);margin-bottom:20px">You scored <strong>${score}</strong> / <strong>${qs.length}</strong></div>
+        <div class="prog-bar" style="margin-bottom:20px"><div class="prog-fill" style="width:${Math.round(score/qs.length*100)}%;background:${score===qs.length?'var(--success)':'var(--accent)'}"></div></div>
+        <button class="btn btn-primary" onclick="setSubject(activeSub)">Try Again</button>
+      </div>`;
+    SS.xp += score * 15; SS.save();
+    return;
+  }
+
+  const q = qs[qi];
+  area.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <span style="font-size:13px;color:var(--text2)">Question ${qi+1} of ${qs.length}</span>
+      <span class="badge badge-purple">Score: ${score}</span>
+    </div>
+    <div class="prog-bar" style="margin-bottom:20px">
+      <div class="prog-fill" style="width:${qi/qs.length*100}%;background:var(--accent)"></div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div style="font-size:16px;font-weight:500;line-height:1.5">${q.q}</div>
+    </div>
+    <div id="options">
+      ${q.opts.map((opt,i)=>`
+        <button class="quiz-opt" id="opt-${i}" onclick="answer(${i})">${opt}</button>`).join('')}
+    </div>
+    <div id="feedback"></div>`;
+}
+
+function answer(i) {
+  if (selected !== null) return;
+  selected = i;
+  const q = QUIZZES[activeSub][qi];
+  const correct = i === q.ans;
+  if (correct) score++;
+
+  q.opts.forEach((_,idx) => {
+    const btn = document.getElementById('opt-'+idx);
+    if (idx === q.ans) btn.classList.add('correct');
+    else if (idx === i && !correct) btn.classList.add('wrong');
+    btn.disabled = true;
+  });
+
+  document.getElementById('feedback').innerHTML = `
+    <div class="card" style="margin-top:12px;border-color:${correct?'var(--success)':'var(--danger)'}">
+      <div style="font-size:12px;font-weight:600;color:${correct?'var(--success)':'var(--danger)'};margin-bottom:4px">${correct?'✓ Correct!':'✗ Incorrect'}</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.5">${q.exp}</div>
+      <button class="btn btn-primary btn-sm" style="margin-top:10px" onclick="next()">${qi<QUIZZES[activeSub].length-1?'Next →':'See Results'}</button>
+    </div>`;
+}
+
+function next() {
+  if (qi < QUIZZES[activeSub].length - 1) { qi++; selected = null; renderQuiz(); }
+  else { done = true; renderQuiz(); }
+}
+
+renderPills();
+renderQuiz();
+</script>
+</body>
+</html>

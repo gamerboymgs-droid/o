@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acadence AI — Cadence</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div id="sidebar-mount"></div>
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">🤖 Cadence</div>
+    <div class="page-sub">Ask Cadence anything — explanations, practice problems, concept breakdowns</div>
+  </div>
+  <div class="page-content" style="max-width:700px">
+
+    <div class="chat-area" id="chat-area"></div>
+
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input class="form-input" id="ai-input" placeholder="Ask a question about any topic..." style="flex:1" onkeydown="if(event.key==='Enter')send()"/>
+      <button class="btn btn-primary" onclick="send()">Send ↗</button>
+    </div>
+
+    <div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:8px">Quick prompts:</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="quick-prompts"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+document.getElementById('sidebar-mount').innerHTML = buildSidebar('ai');
+
+const QUICK = [
+  'Explain the Krebs cycle step by step',
+  'Solve ∫2x dx for me',
+  'What caused WWI in simple terms?',
+  'Explain Big O notation with examples',
+  "Analyze Hamlet's \"To be or not to be\"",
+  'What is the derivative of x³?',
+];
+
+document.getElementById('quick-prompts').innerHTML = QUICK.map(p=>`
+  <button class="btn btn-ghost btn-sm" onclick="quickPrompt('${p.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">${p}</button>`).join('');
+
+function renderMessages() {
+  const area = document.getElementById('chat-area');
+  area.innerHTML = SS.chatMessages.map(m=>`
+    <div class="chat-msg ${m.role}">
+      ${m.role==='ai'?'<div class="chat-avatar">AI</div>':''}
+      <div class="chat-bubble ${m.role}">${m.text}</div>
+    </div>`).join('');
+  area.scrollTop = area.scrollHeight;
+}
+
+function send() {
+  const inp  = document.getElementById('ai-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  SS.chatMessages.push({role:'user', text});
+  renderMessages();
+
+  // Typing indicator
+  const area = document.getElementById('chat-area');
+  area.innerHTML += `<div class="chat-msg ai" id="typing"><div class="chat-avatar">AI</div><div class="chat-bubble ai" style="color:var(--text3)">Thinking…</div></div>`;
+  area.scrollTop = area.scrollHeight;
+
+  setTimeout(() => {
+    const resp = getAIResponse(text);
+    SS.chatMessages.push({role:'ai', text:resp});
+    SS.save();
+    renderMessages();
+  }, 900 + Math.random()*600);
+}
+
+function quickPrompt(p) {
+  document.getElementById('ai-input').value = p;
+  send();
+}
+
+renderMessages();
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acadence AI — Leaderboard</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div id="sidebar-mount"></div>
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">🏆 Leaderboard</div>
+    <div class="page-sub">See how you stack up against other learners</div>
+  </div>
+  <div class="page-content">
+
+    <!-- Top 3 podium -->
+    <div class="grid-3" style="margin-bottom:24px" id="podium"></div>
+
+    <!-- Full list -->
+    <div class="card" style="padding:0" id="lb-list"></div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+document.getElementById('sidebar-mount').innerHTML = buildSidebar('leaderboard');
+
+const USERS = [
+  {name:'Priya L.',  xp:5240, level:12, streak:14, avatar:'PL'},
+  {name:'Jordan M.', xp:4890, level:11, streak:9,  avatar:'JM'},
+  {name:'Sam R.',    xp:4210, level:10, streak:7,  avatar:'SR'},
+  {name:'Alex Kim',  xp:SS.xp, level:7, streak:SS.streak, avatar:'AK', you:true},
+  {name:'Lily T.',   xp:2640, level:7,  streak:3,  avatar:'LT'},
+  {name:'Morgan P.', xp:2310, level:6,  streak:2,  avatar:'MP'},
+  {name:'Dev K.',    xp:1980, level:5,  streak:1,  avatar:'DK'},
+];
+
+// Sort by XP descending
+USERS.sort((a,b) => b.xp - a.xp);
+
+// Podium (top 3)
+document.getElementById('podium').innerHTML = USERS.slice(0,3).map((u,i)=>`
+  <div class="card" style="text-align:center;${i===0?'border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.05)':''}">
+    <div style="font-size:${i===0?32:24}px;margin-bottom:8px">${['🥇','🥈','🥉'][i]}</div>
+    <div class="avatar" style="margin:0 auto 10px;width:40px;height:40px;font-size:14px">${u.avatar}</div>
+    <div style="font-size:14px;font-weight:600">${u.name}${u.you?' (You)':''}</div>
+    <div style="font-size:13px;color:var(--accent2);margin-top:3px">${u.xp.toLocaleString()} XP</div>
+    <div style="font-size:12px;color:var(--text3);margin-top:2px">Level ${u.level} · 🔥 ${u.streak}d</div>
+  </div>`).join('');
+
+// Full list
+document.getElementById('lb-list').innerHTML = USERS.map((u,i)=>`
+  <div class="lb-row" style="${u.you?'background:rgba(108,99,255,.08)':''}${i===USERS.length-1?';border-bottom:none':''}">
+    <div class="lb-rank ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</div>
+    <div class="avatar" style="width:32px;height:32px;font-size:12px">${u.avatar}</div>
+    <div style="flex:1">
+      <div style="font-size:13.5px;font-weight:${u.you?600:400};color:${u.you?'var(--accent2)':'var(--text)'}">${u.name}${u.you?' (You)':''}</div>
+      <div style="font-size:11px;color:var(--text3)">Level ${u.level} · 🔥 ${u.streak} day streak</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:13px;font-weight:600">${u.xp.toLocaleString()}</div>
+      <div style="font-size:11px;color:var(--text3)">XP</div>
+    </div>
+  </div>`).join('');
+</script>
+</body>
+</html>

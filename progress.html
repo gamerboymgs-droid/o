@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acadence AI — Progress</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div id="sidebar-mount"></div>
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">📊 Progress Tracker</div>
+    <div class="page-sub">Your learning journey this week</div>
+  </div>
+  <div class="page-content">
+
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-card">
+        <div class="stat-label">Total Minutes</div>
+        <div class="stat-val" id="s-mins">230</div>
+        <div class="stat-sub">This week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tasks Done</div>
+        <div class="stat-val" id="s-tasks">15</div>
+        <div class="stat-sub">Across 4 days</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Streak</div>
+        <div class="stat-val" id="s-streak">🔥 4</div>
+        <div class="stat-sub">days in a row</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">XP This Week</div>
+        <div class="stat-val">+420</div>
+        <div class="trend-up">↑ Level 7</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Bar chart -->
+      <div class="card">
+        <div style="font-size:13px;font-weight:500;margin-bottom:16px">Weekly Study Time (minutes)</div>
+        <div id="bar-chart" style="display:flex;align-items:flex-end;gap:8px;height:130px"></div>
+      </div>
+
+      <!-- Streak + XP -->
+      <div class="card">
+        <div style="font-size:13px;font-weight:500;margin-bottom:10px">🔥 Streak</div>
+        <div style="font-family:var(--display);font-size:32px;font-weight:700;color:var(--warn)" id="streak-big">4 days</div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Best streak: 7 days</div>
+        <div style="display:flex;gap:6px" id="streak-days"></div>
+        <div style="margin-top:18px">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:6px">Level 7 — XP Progress</div>
+          <div class="prog-bar"><div class="prog-fill" id="xp-bar" style="width:68%;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:4px">
+            <span id="xp-val">2,840 XP</span><span>4,000 XP to Level 8</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div style="margin-top:16px">
+      <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">🏅 Badges Earned</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        ${[
+          {icon:'🔥',name:'Week Warrior',   desc:'7-day streak'},
+          {icon:'📚',name:'Knowledge Seeker',desc:'10 posts read'},
+          {icon:'⚡',name:'Quick Learner',  desc:'First quiz aced'},
+          {icon:'🌟',name:'Contributor',    desc:'First post created'},
+          {icon:'🎯',name:'On Target',      desc:'Study goal met 5×'},
+          {icon:'🤖',name:'AI Explorer',    desc:'First AI chat'},
+        ].map(b=>`
+          <div class="card-sm" style="display:flex;align-items:center;gap:10px;min-width:155px">
+            <div style="font-size:24px">${b.icon}</div>
+            <div>
+              <div style="font-size:13px;font-weight:500">${b.name}</div>
+              <div style="font-size:11px;color:var(--text3)">${b.desc}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- Log today -->
+    <div style="margin-top:20px">
+      <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">📝 Log Today</div>
+      <div class="card" style="max-width:400px;display:flex;gap:12px;align-items:flex-end">
+        <div class="form-group" style="flex:1;margin:0">
+          <label class="form-label">Minutes studied</label>
+          <input type="number" class="form-input" id="log-mins" min="0" max="480" placeholder="e.g. 45"/>
+        </div>
+        <button class="btn btn-primary" onclick="logStudy()">Log ✓</button>
+      </div>
+      <div id="log-feedback" style="font-size:13px;color:var(--success);margin-top:8px"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+document.getElementById('sidebar-mount').innerHTML = buildSidebar('progress');
+
+const weekData = [
+  {date:'Mon', mins:45,  tasks:3, done:true},
+  {date:'Tue', mins:60,  tasks:4, done:true},
+  {date:'Wed', mins:30,  tasks:2, done:true},
+  {date:'Thu', mins:75,  tasks:5, done:true},
+  {date:'Fri', mins:SS.todayMins, tasks:SS.todayTasks, done:false},
+  {date:'Sat', mins:0,   tasks:0, done:false},
+  {date:'Sun', mins:0,   tasks:0, done:false},
+];
+
+const total   = weekData.reduce((a,d)=>a+d.mins, 0);
+const tasks   = weekData.reduce((a,d)=>a+d.tasks, 0);
+const maxMins = Math.max(...weekData.map(d=>d.mins), 1);
+
+document.getElementById('s-mins').textContent   = total;
+document.getElementById('s-tasks').textContent  = tasks;
+document.getElementById('s-streak').textContent = '🔥 ' + SS.streak;
+document.getElementById('streak-big').textContent = SS.streak + ' days';
+document.getElementById('xp-val').textContent   = SS.xp.toLocaleString() + ' XP';
+
+// Bar chart
+document.getElementById('bar-chart').innerHTML = weekData.map(d=>`
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+    <div style="font-size:10px;color:var(--text3)">${d.mins||''}</div>
+    <div style="width:100%;background:${d.done?'var(--accent)':'var(--border)'};border-radius:4px 4px 0 0;height:${Math.round(d.mins/maxMins*100)}px;min-height:${d.mins?4:0}px;transition:.3s"></div>
+    <div style="font-size:11px;color:var(--text3)">${d.date}</div>
+  </div>`).join('');
+
+// Streak days
+document.getElementById('streak-days').innerHTML = weekData.map((d,i)=>`
+  <div class="streak-day ${i<SS.streak-1?'streak-done':i===SS.streak-1?'streak-today':'streak-miss'}">${d.date[0]}</div>`).join('');
+
+function logStudy() {
+  const mins = parseInt(document.getElementById('log-mins').value) || 0;
+  if (mins <= 0) { alert('Enter a valid number of minutes.'); return; }
+  SS.todayMins = mins;
+  weekData[4].mins = mins;
+  weekData[4].done = mins >= 20;
+  if (mins >= 20) { SS.xp += Math.round(mins/2); SS.streak = Math.min(SS.streak+1, 99); }
+  SS.save();
+  document.getElementById('log-feedback').textContent = `✓ Logged ${mins} minutes! +${Math.round(mins/2)} XP earned.`;
+}
+</script>
+</body>
+</html>

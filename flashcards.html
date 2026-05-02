@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acadence AI — Flashcards</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+  .fc-wrap { perspective: 1000px; cursor: pointer; }
+  .fc-inner { position:relative; width:100%; min-height:200px; transition:transform .5s; transform-style:preserve-3d; }
+  .fc-wrap.flipped .fc-inner { transform: rotateY(180deg); }
+  .fc-face { position:absolute; width:100%; min-height:200px; backface-visibility:hidden; border-radius:16px; border:1px solid var(--border2); background:var(--surface); display:flex;flex-direction:column;align-items:center;justify-content:center; padding:32px 24px; text-align:center; }
+  .fc-back { transform: rotateY(180deg); }
+</style>
+</head>
+<body>
+<div id="sidebar-mount"></div>
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">🃏 Flashcards</div>
+    <div class="page-sub">Click a card to reveal the answer</div>
+  </div>
+  <div class="page-content">
+    <div style="max-width:540px;margin:0 auto">
+
+      <!-- Progress -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span id="card-counter" style="font-size:13px;color:var(--text2)">Card 1 of 5</span>
+        <span id="card-badge" class="badge badge-blue">Biology</span>
+      </div>
+      <div class="prog-bar" style="margin-bottom:20px">
+        <div class="prog-fill" id="fc-progress" style="width:20%;background:var(--accent)"></div>
+      </div>
+
+      <!-- Flashcard -->
+      <div class="fc-wrap" id="fc-wrap" onclick="flipCard()">
+        <div class="fc-inner">
+          <div class="fc-face fc-front">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--text3);text-transform:uppercase;margin-bottom:12px">Question</div>
+            <div id="fc-front-text" style="font-size:18px;font-weight:500;line-height:1.4"></div>
+            <div style="font-size:12px;color:var(--text3);margin-top:16px">Click to reveal answer</div>
+          </div>
+          <div class="fc-face fc-back">
+            <div style="font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--accent2);text-transform:uppercase;margin-bottom:12px">Answer</div>
+            <div id="fc-back-text" style="font-size:14px;color:var(--text2);line-height:1.6"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div style="display:flex;justify-content:center;gap:12px;margin-top:20px" id="fc-controls">
+        <button class="btn btn-ghost" id="btn-prev" onclick="prevCard()">← Prev</button>
+        <button class="btn btn-primary" onclick="flipCard()">Flip Card</button>
+        <button class="btn btn-ghost" id="btn-next" onclick="nextCard()">Next →</button>
+      </div>
+      <div id="result-btns" style="display:none;justify-content:center;gap:12px;margin-top:12px">
+        <button class="btn btn-danger" onclick="nextCard()">✗ Missed</button>
+        <button class="btn" style="background:rgba(16,185,129,.2);color:#6ee7b7;border:1px solid rgba(16,185,129,.3)" onclick="nextCard()">✓ Got it</button>
+      </div>
+
+      <!-- Card list -->
+      <div style="margin-top:28px">
+        <div style="font-size:13px;font-weight:500;margin-bottom:10px">All Cards</div>
+        <div id="card-list" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+document.getElementById('sidebar-mount').innerHTML = buildSidebar('flashcards');
+
+const CARDS = [
+  {front:'What is the powerhouse of the cell?',         back:'The mitochondria — produces ATP via cellular respiration (Krebs cycle + electron transport chain).', subj:'Biology'},
+  {front:'Define the derivative',                        back:'f\'(x) = lim(h→0)[f(x+h)−f(x)]/h. The instantaneous rate of change of f at point x.', subj:'Calculus'},
+  {front:'What were the 4 main causes of WWI?',         back:'MAIN: Militarism, Alliance systems, Imperialism, Nationalism. Franz Ferdinand\'s assassination was the trigger.', subj:'History'},
+  {front:'What is O(n log n) time complexity?',         back:'Linearithmic — common in efficient sorting algorithms like Merge Sort and Heap Sort. Better than O(n²) for large inputs.', subj:'CS'},
+  {front:'What does "in medias res" mean?',             back:'Latin: "in the middle of things." A narrative technique starting the story mid-action, not from the beginning.', subj:'English'},
+  {front:'What is the product rule in calculus?',       back:'d/dx[u·v] = u\'v + uv\'. Use when differentiating a product of two functions.', subj:'Calculus'},
+  {front:'What is natural selection?',                   back:'Organisms with heritable traits better suited to their environment survive and reproduce more, passing those traits on.', subj:'Biology'},
+];
+
+let idx = 0, flipped = false;
+
+function update() {
+  const c = CARDS[idx];
+  document.getElementById('fc-front-text').textContent = c.front;
+  document.getElementById('fc-back-text').textContent  = c.back;
+  document.getElementById('card-counter').textContent  = `Card ${idx+1} of ${CARDS.length}`;
+  document.getElementById('card-badge').textContent    = c.subj;
+  document.getElementById('card-badge').className      = `badge badge-${catColor(c.subj)}`;
+  document.getElementById('fc-progress').style.width   = `${(idx+1)/CARDS.length*100}%`;
+  document.getElementById('btn-prev').disabled = idx === 0;
+  document.getElementById('btn-next').disabled = idx === CARDS.length-1;
+
+  // unflip
+  flipped = false;
+  document.getElementById('fc-wrap').classList.remove('flipped');
+  document.getElementById('result-btns').style.display = 'none';
+  document.getElementById('fc-controls').style.display = 'flex';
+
+  // list
+  document.getElementById('card-list').innerHTML = CARDS.map((card,i)=>`
+    <div class="card-sm" onclick="goCard(${i})" style="cursor:pointer;border-color:${i===idx?'var(--accent)':'var(--border)'}">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:12px;color:var(--text3);min-width:20px">${i+1}.</span>
+        <span style="font-size:13px;color:${i===idx?'var(--accent2)':'var(--text)'}">${card.front}</span>
+        <span class="badge badge-${catColor(card.subj)}" style="margin-left:auto">${card.subj}</span>
+      </div>
+    </div>`).join('');
+}
+
+function flipCard() {
+  flipped = !flipped;
+  document.getElementById('fc-wrap').classList.toggle('flipped', flipped);
+  document.getElementById('result-btns').style.display = flipped ? 'flex' : 'none';
+  document.getElementById('fc-controls').style.display = flipped ? 'none' : 'flex';
+}
+
+function nextCard() { if (idx < CARDS.length-1) { idx++; update(); } }
+function prevCard() { if (idx > 0) { idx--; update(); } }
+function goCard(i)  { idx = i; update(); }
+
+update();
+</script>
+</body>
+</html>

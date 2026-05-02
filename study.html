@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acadence AI — Study Plan</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+  .step-dot { width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0; }
+  .step-dot.done    { background:var(--success);color:#fff; }
+  .step-dot.current { background:var(--accent);color:#fff; }
+  .step-dot.future  { background:var(--border);color:var(--text3); }
+  .step-line { flex:1;height:2px;background:var(--border); }
+  .step-line.done { background:var(--success); }
+  .onboard-opt { width:100%;text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:12px 16px;font-size:14px;color:var(--text);margin-bottom:8px;cursor:pointer;transition:.15s; }
+  .onboard-opt:hover { border-color:var(--accent);color:var(--accent2); }
+  .day-btn { width:44px;height:36px;border-radius:8px;border:1px solid var(--border);background:transparent;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:.15s; }
+  .day-btn.active { background:rgba(108,99,255,.2);border-color:rgba(108,99,255,.4);color:var(--accent2); }
+</style>
+</head>
+<body>
+<div id="sidebar-mount"></div>
+<div class="main" id="main-area"></div>
+
+<script src="app.js"></script>
+<script>
+document.getElementById('sidebar-mount').innerHTML = buildSidebar('study');
+
+let obStep = 0;
+const obData = {};
+const selectedDays = [];
+
+function render() {
+  if (SS.studyPlan) { renderPlan(); return; }
+  renderOnboarding();
+}
+
+/* ── ONBOARDING ── */
+function renderOnboarding() {
+  const steps = ['Learning Style','Course Info','Schedule','Generate'];
+  document.getElementById('main-area').innerHTML = `
+    <div class="page-header">
+      <div><div class="page-title">Set Up Your Study Plan 📅</div>
+      <div class="page-sub">We'll build a personalized schedule just for you</div></div>
+    </div>
+    <div class="page-content">
+      <div style="display:flex;align-items:center;gap:0;margin-bottom:28px;max-width:520px">
+        ${steps.map((s,i)=>`
+          <div class="step-dot ${i<obStep?'done':i===obStep?'current':'future'}">${i<obStep?'✓':i+1}</div>
+          ${i<steps.length-1?`<div class="step-line ${i<obStep?'done':''}"></div>`:''}`).join('')}
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:32px;max-width:520px" id="ob-body"></div>
+    </div>`;
+  renderObStep();
+}
+
+function renderObStep() {
+  const body = document.getElementById('ob-body');
+  if (!body) return;
+  if (obStep === 0) body.innerHTML = `
+    <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:6px">When do you study best?</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Your peak focus time anchors your daily schedule.</div>
+    ${['🌅 Morning (6am–12pm)','☀️ Afternoon (12pm–5pm)','🌙 Evening (5pm–9pm)','🦉 Night (9pm–12am)'].map(o=>`
+      <button class="onboard-opt" onclick="obData.time='${o}';obStep=1;renderOnboarding()">${o}</button>`).join('')}`;
+
+  else if (obStep === 1) body.innerHTML = `
+    <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:6px">Tell us about your course</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:20px">We'll calibrate difficulty and content.</div>
+    <div class="form-group">
+      <label class="form-label">Subject / Course</label>
+      <input class="form-input" id="ob-subj" placeholder="e.g. AP Biology, Calculus BC…"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Course Level</label>
+      <select class="form-input" id="ob-level">
+        <option>Regular</option><option>Honors</option><option>AP / IB</option><option>College</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Exam Date</label>
+      <input type="date" class="form-input" id="ob-date" min="${new Date().toISOString().split('T')[0]}"/>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-ghost" onclick="obStep=0;renderOnboarding()">← Back</button>
+      <button class="btn btn-primary" onclick="saveStep1()">Continue →</button>
+    </div>`;
+
+  else if (obStep === 2) body.innerHTML = `
+    <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:6px">Daily availability</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:20px">Be realistic — consistency beats intensity.</div>
+    <div class="form-group">
+      <label class="form-label">Time available per day</label>
+      <select class="form-input" id="ob-mins">
+        <option value="30">30 min/day</option>
+        <option value="45">45 min/day</option>
+        <option value="60" selected>1 hour/day</option>
+        <option value="90">1.5 hours/day</option>
+        <option value="120">2 hours/day</option>
+        <option value="180">3+ hours/day</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Study days</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+        ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`
+          <button class="day-btn" id="day-${d}" onclick="toggleDay('${d}')">${d}</button>`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-ghost" onclick="obStep=1;renderOnboarding()">← Back</button>
+      <button class="btn btn-primary" onclick="saveStep2()">Generate Plan →</button>
+    </div>`;
+
+  else if (obStep === 3) {
+    body.innerHTML = `
+      <div style="text-align:center;padding:10px 0">
+        <div style="font-size:40px;margin-bottom:12px">⚙️</div>
+        <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:8px">Generating your plan…</div>
+        <div style="font-size:13px;color:var(--text2)">Analyzing your goals and building a smart schedule.</div>
+        <div class="prog-bar" style="margin:20px auto;max-width:280px">
+          <div class="prog-fill" id="gen-bar" style="width:0%;background:var(--accent);transition:width 1.4s ease"></div>
+        </div>
+      </div>`;
+    setTimeout(()=>{ const b=document.getElementById('gen-bar'); if(b) b.style.width='100%'; }, 50);
+    setTimeout(generatePlan, 1600);
+  }
+}
+
+function saveStep1() {
+  const subj  = document.getElementById('ob-subj')?.value.trim();
+  const level = document.getElementById('ob-level')?.value;
+  const date  = document.getElementById('ob-date')?.value;
+  if (!subj) { alert('Please enter your subject.'); return; }
+  Object.assign(obData, {subj, level, date});
+  obStep = 2; renderOnboarding();
+}
+
+function toggleDay(d) {
+  const i = selectedDays.indexOf(d);
+  const btn = document.getElementById('day-'+d);
+  if (i >= 0) { selectedDays.splice(i,1); btn?.classList.remove('active'); }
+  else { selectedDays.push(d); btn?.classList.add('active'); }
+}
+
+function saveStep2() {
+  obData.mins = document.getElementById('ob-mins')?.value || '60';
+  obData.days = selectedDays.length ? [...selectedDays] : ['Mon','Tue','Wed','Thu','Fri'];
+  obStep = 3; renderOnboarding();
+}
+
+const TOPICS = {
+  Biology:   ['Cell Structure','DNA & RNA','Genetics','Evolution','Ecology','Cellular Respiration','Photosynthesis','Nervous System'],
+  Math:      ['Limits','Derivatives','Chain Rule','Integrals','Integration Techniques','Series & Sequences'],
+  History:   ['Causes of WWI','WWI Battles','Treaty of Versailles','Rise of Fascism','WWII Pacific','Cold War'],
+  CS:        ['Big O Notation','Sorting Algorithms','Data Structures','Recursion','Graph Algorithms','Dynamic Programming'],
+  English:   ['Literary Devices','Essay Structure','Shakespeare','Poetry Analysis','Rhetoric','Grammar Review'],
+  default:   ['Introduction','Core Concepts','Practice Problems','Deep Dives','Mock Exam Prep','Final Review'],
+};
+
+function generatePlan() {
+  const subj = obData.subj || 'Study';
+  const key  = Object.keys(TOPICS).find(k => subj.toLowerCase().includes(k.toLowerCase())) || 'default';
+  const topicList = TOPICS[key];
+  const schedule  = topicList.map((t,i) => ({ label:`${subj}: ${t}`, done: i < 2, mins: parseInt(obData.mins)||60, topic:t }));
+  SS.studyPlan = { subject:subj, level:obData.level, examDate:obData.date, studyTime:obData.time, dailyMins:obData.mins, days:obData.days, schedule };
+  SS.save();
+  renderPlan();
+}
+
+/* ── PLAN VIEW ── */
+function renderPlan() {
+  const sp   = SS.studyPlan;
+  const done = sp.schedule.filter(t=>t.done).length;
+  const pct  = Math.round(done/sp.schedule.length*100);
+
+  // Calendar helpers
+  const now   = new Date();
+  const year  = now.getFullYear(), month = now.getMonth();
+  const first = new Date(year, month, 1).getDay();
+  const days  = new Date(year, month+1, 0).getDate();
+  const mNames= ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const plannedDays = [1,3,5,8,10,12,15,17,19,22];
+
+  document.getElementById('main-area').innerHTML = `
+    <div class="page-header">
+      <div>
+        <div class="page-title">📅 Study Plan — ${sp.subject}</div>
+        <div class="page-sub">${sp.level} · ${sp.dailyMins} min/day · Exam: ${sp.examDate||'TBD'}</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="resetPlan()">↻ Reset Plan</button>
+    </div>
+    <div class="page-content">
+      <div class="grid-3" style="margin-bottom:20px">
+        <div class="stat-card">
+          <div class="stat-label">Overall Progress</div>
+          <div class="stat-val">${pct}%</div>
+          <div class="prog-bar" style="margin-top:8px"><div class="prog-fill" style="width:${pct}%;background:var(--accent)"></div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Topics Done</div>
+          <div class="stat-val">${done}/${sp.schedule.length}</div>
+          <div class="stat-sub">topics</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Streak</div>
+          <div class="stat-val">🔥 ${SS.streak}</div>
+          <div class="stat-sub">days</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">📋 Schedule</div>
+          <div class="card" style="padding:0">
+            ${sp.schedule.map((t,i)=>`
+              <div style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);${i===sp.schedule.length-1?'border-bottom:none':''}">
+                <div onclick="togglePlanTask(${i})" style="width:22px;height:22px;border-radius:6px;border:1.5px solid ${t.done?'var(--success)':'var(--border2)'};background:${t.done?'var(--success)':'transparent'};display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:12px;flex-shrink:0">${t.done?'✓':''}</div>
+                <div style="flex:1">
+                  <div style="font-size:13.5px;color:${t.done?'var(--text3)':'var(--text)'};text-decoration:${t.done?'line-through':'none'};font-weight:${i===done?500:400}">${t.label}</div>
+                  <div style="font-size:11px;color:var(--text3);margin-top:2px">${t.mins} min · ${i<done?'Completed':i===done?'Current':i===done+1?'Up next':'Upcoming'}</div>
+                </div>
+                ${i===done?'<span class="badge badge-purple" style="font-size:11px">Now</span>':''}
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">📆 Calendar</div>
+          <div class="card" style="padding:14px">
+            <div style="font-size:13px;font-weight:500;margin-bottom:12px">${mNames[month]} ${year}</div>
+            <div class="cal-grid">
+              ${['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>`<div style="text-align:center;font-size:11px;color:var(--text3);padding:4px 0">${d}</div>`).join('')}
+              ${Array(first).fill('<div></div>').join('')}
+              ${Array.from({length:days},(_,i)=>{
+                const d=i+1, today=d===now.getDate();
+                const plan=plannedDays.includes(d), comp=plan&&d<now.getDate();
+                return `<div class="cal-cell ${today?'today':''} ${comp?'completed':plan?'has-plan':''}">${d}${plan?'<span class="cal-dot"></span>':''}</div>`;
+              }).join('')}
+            </div>
+            <div style="display:flex;gap:12px;margin-top:10px;font-size:11px;color:var(--text3)"><span>🟣 Planned</span><span>🟢 Completed</span></div>
+          </div>
+
+          <div style="margin-top:16px">
+            <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:10px">📊 Log Study Time</div>
+            <div class="card">
+              <div class="form-group" style="margin-bottom:10px">
+                <label class="form-label">Minutes studied today</label>
+                <input type="number" class="form-input" id="log-mins" value="${SS.todayMins}" min="0" max="480"/>
+              </div>
+              <button class="btn btn-primary" style="width:100%" onclick="logStudy()">Log Session ✓</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function togglePlanTask(i) {
+  SS.studyPlan.schedule[i].done = !SS.studyPlan.schedule[i].done;
+  SS.xp += SS.studyPlan.schedule[i].done ? 30 : -30;
+  SS.save(); renderPlan();
+}
+
+function logStudy() {
+  const mins = parseInt(document.getElementById('log-mins')?.value) || 0;
+  SS.todayMins = mins;
+  if (mins >= 20) { SS.streak = Math.max(SS.streak, SS.streak+0); SS.xp += 20; }
+  SS.save(); renderPlan();
+}
+
+function resetPlan() {
+  if (!confirm('Reset your study plan and start over?')) return;
+  SS.studyPlan = null; SS.save(); obStep=0; render();
+}
+
+render();
+</script>
+</body>
+</html>

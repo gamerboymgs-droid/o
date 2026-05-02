@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acadence AI — Community</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div id="sidebar-mount"></div>
+<div class="main">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Community Hub 🌐</div>
+      <div class="page-sub">Explore knowledge shared by learners worldwide</div>
+    </div>
+    <button class="btn btn-primary" onclick="openNewPost()">✍️ Create Post</button>
+  </div>
+  <div class="page-content">
+
+    <!-- Filters -->
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Search posts..." oninput="renderPosts()"/>
+      </div>
+      <div id="cat-filters" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" id="tab-newest" onclick="setTab('newest')">Newest</div>
+      <div class="tab" id="tab-top"    onclick="setTab('top')">Top Voted</div>
+      <div class="tab" id="tab-bookmarked" onclick="setTab('bookmarked')">Bookmarked</div>
+    </div>
+
+    <div id="post-list" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+</div>
+
+<!-- New Post Modal -->
+<div id="new-post-modal" style="display:none" class="overlay">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">Create New Post</div>
+      <button class="btn-icon" onclick="closeNewPost()">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input class="form-input" id="np-title" placeholder="Enter a clear, specific title..."/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-input" id="np-cat">
+        <option>Science</option><option>Math</option><option>History</option><option>CS</option><option>English</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Content</label>
+      <textarea class="form-input" id="np-content" placeholder="Share your knowledge, question, or explanation..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tags (comma separated)</label>
+      <input class="form-input" id="np-tags" placeholder="e.g. AP Biology, Genetics, DNA"/>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+      <button class="btn btn-ghost" onclick="closeNewPost()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitPost()">Publish Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- View Post Modal -->
+<div id="view-post-modal" style="display:none" class="overlay" onclick="closeViewPost()">
+  <div class="modal" id="view-post-content" onclick="event.stopPropagation()"></div>
+</div>
+
+<script src="app.js"></script>
+<script>
+document.getElementById('sidebar-mount').innerHTML = buildSidebar('community');
+
+const cats = ['All','Science','Math','History','CS','English'];
+let activeCat = 'All';
+let activeTab = 'newest';
+
+// Category filter buttons
+document.getElementById('cat-filters').innerHTML = cats.map(c=>`
+  <button class="subject-pill ${c==='All'?'active':''}" id="cat-${c}" onclick="setCat('${c}')">${c}</button>`).join('');
+
+function setCat(c) {
+  activeCat = c;
+  cats.forEach(x => document.getElementById('cat-'+x).classList.toggle('active', x===c));
+  renderPosts();
+}
+
+function setTab(t) {
+  activeTab = t;
+  ['newest','top','bookmarked'].forEach(x => {
+    document.getElementById('tab-'+x).classList.toggle('active', x===t);
+  });
+  renderPosts();
+}
+
+function renderPosts() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  let posts = SS.posts.slice();
+  if (activeCat !== 'All') posts = posts.filter(p => p.cat === activeCat);
+  if (q) posts = posts.filter(p => p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q));
+  if (activeTab === 'top') posts.sort((a,b) => b.votes - a.votes);
+  if (activeTab === 'bookmarked') posts = posts.filter(p => p.bookmarked);
+
+  document.getElementById('post-list').innerHTML = posts.length
+    ? posts.map(postCardHTML).join('')
+    : '<div style="text-align:center;padding:48px;color:var(--text3)">No posts found.</div>';
+}
+
+function postCardHTML(p) {
+  return `
+  <div class="post-card" onclick="openPost(${p.id})">
+    <div class="vote-col">
+      <button class="vote-btn ${p.voted===1?'active-up':''}" onclick="event.stopPropagation();vote(${p.id},1)">▲</button>
+      <span class="vote-count">${p.votes}</span>
+      <button class="vote-btn ${p.voted===-1?'active-dn':''}" onclick="event.stopPropagation();vote(${p.id},-1)">▼</button>
+    </div>
+    <div class="post-body">
+      <div class="post-meta">
+        <span class="badge badge-${catColor(p.cat)}">${p.cat}</span>
+        ${p.tags.map(t=>`<span class="badge badge-gray">${t}</span>`).join('')}
+      </div>
+      <div class="post-title">${p.title}</div>
+      <div class="post-excerpt">${p.content}</div>
+      <div class="post-footer">
+        <span class="post-stat">👤 ${p.author}</span>
+        <span class="post-stat">💬 ${p.comments}</span>
+        <span class="post-stat">🕐 ${p.time}</span>
+        <button class="btn btn-ghost btn-sm" style="margin-left:auto;padding:3px 8px" onclick="event.stopPropagation();bookmark(${p.id})">${p.bookmarked?'🔖 Saved':'📌 Save'}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function vote(id, dir) {
+  const p = SS.posts.find(p=>p.id===id);
+  if (!p) return;
+  if (p.voted === dir) { p.votes -= dir; p.voted = 0; }
+  else { p.votes += dir - p.voted; p.voted = dir; }
+  SS.save(); renderPosts();
+}
+
+function bookmark(id) {
+  const p = SS.posts.find(p=>p.id===id);
+  if (p) { p.bookmarked = !p.bookmarked; SS.save(); renderPosts(); }
+}
+
+function openPost(id) {
+  const p = SS.posts.find(p=>p.id===id);
+  if (!p) return;
+  document.getElementById('view-post-content').innerHTML = `
+    <div class="modal-header">
+      <span class="badge badge-${catColor(p.cat)}">${p.cat}</span>
+      <button class="btn-icon" onclick="closeViewPost()">✕</button>
+    </div>
+    <h2 style="font-family:var(--display);font-size:20px;font-weight:700;margin-bottom:10px;line-height:1.3">${p.title}</h2>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:16px">By ${p.author} · ${p.time} · ▲ ${p.votes}</div>
+    <div style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px">${p.content}</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">${p.tags.map(t=>`<span class="badge badge-gray">${t}</span>`).join('')}</div>
+    <hr class="divider"/>
+    <div style="font-size:13px;font-weight:500;margin-bottom:12px">Comments (${p.comments})</div>
+    <div id="comments-list">
+      <div style="display:flex;gap:10px;margin-bottom:12px">
+        <div class="avatar" style="width:28px;height:28px;font-size:11px;flex-shrink:0">JM</div>
+        <div><div style="font-size:12px;font-weight:500">Jordan M. <span style="color:var(--text3);font-weight:400">1h ago</span></div>
+        <div style="font-size:13px;color:var(--text2);margin-top:2px">Great explanation! Really helped me understand the topic.</div></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <input class="form-input" id="comment-input" placeholder="Add a comment..." style="flex:1"/>
+      <button class="btn btn-primary btn-sm" onclick="addComment(${p.id})">Post</button>
+    </div>`;
+  document.getElementById('view-post-modal').style.display = 'flex';
+}
+
+function addComment(id) {
+  const inp = document.getElementById('comment-input');
+  const text = inp?.value.trim();
+  if (!text) return;
+  const p = SS.posts.find(p=>p.id===id);
+  if (p) p.comments++;
+  const list = document.getElementById('comments-list');
+  if (list) list.innerHTML += `
+    <div style="display:flex;gap:10px;margin-bottom:12px">
+      <div class="avatar" style="width:28px;height:28px;font-size:11px;flex-shrink:0">AK</div>
+      <div><div style="font-size:12px;font-weight:500">Alex Kim <span style="color:var(--text3);font-weight:400">Just now</span></div>
+      <div style="font-size:13px;color:var(--text2);margin-top:2px">${text}</div></div>
+    </div>`;
+  inp.value = '';
+  SS.save();
+}
+
+function closeViewPost() {
+  document.getElementById('view-post-modal').style.display = 'none';
+}
+
+function openNewPost() {
+  document.getElementById('new-post-modal').style.display = 'flex';
+}
+
+function closeNewPost() {
+  document.getElementById('new-post-modal').style.display = 'none';
+}
+
+function submitPost() {
+  const title   = document.getElementById('np-title').value.trim();
+  const cat     = document.getElementById('np-cat').value;
+  const content = document.getElementById('np-content').value.trim();
+  const tags    = document.getElementById('np-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  if (!title || !content) { alert('Please fill in title and content.'); return; }
+  SS.posts.unshift({ id: Date.now(), title, content, author:'Alex Kim', cat, tags, votes:1, comments:0, time:'Just now', bookmarked:false, voted:1 });
+  SS.xp += 50; SS.save();
+  closeNewPost();
+  renderPosts();
+}
+
+renderPosts();
+</script>
+</body>
+</html>
