@@ -78,6 +78,7 @@
 <script src="app.js"></script>
 <script>
 document.getElementById('sidebar-mount').innerHTML = buildSidebar('community');
+if (!requireAuth()) { throw 0; }
 
 const cats = ['All','Science','Math','History','CS','English'];
 let activeCat = 'All';
@@ -90,7 +91,7 @@ document.getElementById('cat-filters').innerHTML = cats.map(c=>`
 function setCat(c) {
   activeCat = c;
   cats.forEach(x => document.getElementById('cat-'+x).classList.toggle('active', x===c));
-  renderPosts();
+  renderPosts(); trackTypingXP(document.getElementById('search-input'), 1);
 }
 
 function setTab(t) {
@@ -98,7 +99,7 @@ function setTab(t) {
   ['newest','top','bookmarked'].forEach(x => {
     document.getElementById('tab-'+x).classList.toggle('active', x===t);
   });
-  renderPosts();
+  renderPosts(); trackTypingXP(document.getElementById('search-input'), 1);
 }
 
 function renderPosts() {
@@ -144,7 +145,7 @@ function vote(id, dir) {
   if (!p) return;
   if (p.voted === dir) { p.votes -= dir; p.voted = 0; }
   else { p.votes += dir - p.voted; p.voted = dir; }
-  SS.save(); renderPosts();
+  SS.save(); renderPosts(); trackTypingXP(document.getElementById('search-input'), 1);
 }
 
 function bookmark(id) {
@@ -216,12 +217,12 @@ function submitPost() {
   const tags    = document.getElementById('np-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
   if (!title || !content) { alert('Please fill in title and content.'); return; }
   SS.posts.unshift({ id: Date.now(), title, content, author:'Alex Kim', cat, tags, votes:1, comments:0, time:'Just now', bookmarked:false, voted:1 });
-  SS.xp += 50; SS.save();
+  Auth.addXP(50);
   closeNewPost();
-  renderPosts();
+  renderPosts(); trackTypingXP(document.getElementById('search-input'), 1);
 }
 
-renderPosts();
+renderPosts(); trackTypingXP(document.getElementById('search-input'), 1);
 </script>
 </body>
 </html>

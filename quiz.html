@@ -22,6 +22,7 @@
 <script src="app.js"></script>
 <script>
 document.getElementById('sidebar-mount').innerHTML = buildSidebar('quiz');
+if (!requireAuth()) { throw 0; }
 
 const QUIZZES = {
   Science: [

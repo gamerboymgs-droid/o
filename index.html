@@ -11,131 +11,99 @@
 <div class="main">
   <div class="page-header">
     <div>
-      <div class="page-title">Welcome back, Alex 👋</div>
-      <div class="page-sub" id="streak-sub">You're on a 4-day streak. Keep it up!</div>
+      <div class="page-title" id="welcome-title">Welcome back!</div>
+      <div class="page-sub" id="streak-sub">Loading...</div>
     </div>
-    <a href="study.html" class="btn btn-primary">📅 My Study Plan</a>
+    <a href="study.html" class="btn btn-primary">My Study Plan</a>
   </div>
   <div class="page-content">
-
-    <!-- Stats row -->
     <div class="grid-4" style="margin-bottom:20px">
-      <div class="stat-card">
-        <div class="stat-label">Study Streak</div>
-        <div class="stat-val" id="stat-streak">🔥 4</div>
-        <div class="stat-sub">Days in a row</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Today's Progress</div>
-        <div class="stat-val" id="stat-today">20m</div>
-        <div class="stat-sub" id="stat-tasks">1/5 tasks done</div>
-        <div class="prog-bar" style="margin-top:8px"><div class="prog-fill" id="task-bar" style="width:20%;background:var(--accent)"></div></div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Total XP</div>
-        <div class="stat-val" id="stat-xp">2,840</div>
-        <div class="trend-up">↑ +120 this week</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Bookmarked Posts</div>
-        <div class="stat-val" id="stat-bookmarks">0</div>
-        <div class="stat-sub">Saved for review</div>
-      </div>
+      <div class="stat-card"><div class="stat-label">Study Streak</div><div class="stat-val" id="stat-streak">0</div><div class="stat-sub">Days in a row</div></div>
+      <div class="stat-card"><div class="stat-label">Today's Progress</div><div class="stat-val" id="stat-today">0m</div><div class="stat-sub" id="stat-tasks">0/5 tasks done</div><div class="prog-bar" style="margin-top:8px"><div class="prog-fill" id="task-bar" style="width:0%;background:var(--accent)"></div></div></div>
+      <div class="stat-card"><div class="stat-label">Total XP</div><div class="stat-val" id="stat-xp">0</div><div class="trend-up">+2 XP per note typed</div></div>
+      <div class="stat-card"><div class="stat-label">Bookmarked Posts</div><div class="stat-val" id="stat-bookmarks">0</div><div class="stat-sub">Saved for review</div></div>
     </div>
 
     <div class="grid-2">
-      <!-- Trending -->
       <div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div style="font-family:var(--display);font-weight:600;font-size:15px">🔥 Trending Posts</div>
-          <a href="community.html" class="btn btn-ghost btn-sm">View all →</a>
+          <div style="font-family:var(--display);font-weight:600;font-size:15px">Trending Posts</div>
+          <a href="community.html" class="btn btn-ghost btn-sm">View all</a>
         </div>
         <div id="trending-posts" style="display:flex;flex-direction:column;gap:10px"></div>
       </div>
-
-      <!-- Quick actions -->
       <div>
-        <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">⚡ Quick Actions</div>
+        <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">Quick Actions</div>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <a href="quiz.html" class="card-sm" style="display:flex;align-items:center;gap:12px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(108,99,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px">🧠</div>
-            <div><div style="font-size:13.5px;font-weight:500">Practice Quiz</div><div style="font-size:12px;color:var(--text3)">Test your knowledge</div></div>
-          </a>
-          <a href="flashcards.html" class="card-sm" style="display:flex;align-items:center;gap:12px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(56,189,248,.15);display:flex;align-items:center;justify-content:center;font-size:18px">🃏</div>
-            <div><div style="font-size:13.5px;font-weight:500">Flashcards</div><div style="font-size:12px;color:var(--text3)">5 cards ready</div></div>
-          </a>
-          <a href="ai.html" class="card-sm" style="display:flex;align-items:center;gap:12px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(16,185,129,.15);display:flex;align-items:center;justify-content:center;font-size:18px">🤖</div>
-            <div><div style="font-size:13.5px;font-weight:500">Cadence</div><div style="font-size:12px;color:var(--text3)">Ask anything</div></div>
-          </a>
-          <a href="community.html" class="card-sm" style="display:flex;align-items:center;gap:12px">
-            <div style="width:36px;height:36px;border-radius:8px;background:rgba(245,158,11,.15);display:flex;align-items:center;justify-content:center;font-size:18px">✍️</div>
-            <div><div style="font-size:13.5px;font-weight:500">Create a Post</div><div style="font-size:12px;color:var(--text3)">Share knowledge</div></div>
-          </a>
+          <a href="quiz.html" class="card-sm" style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:8px;background:rgba(108,99,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px">&#x1F9E0;</div><div><div style="font-size:13.5px;font-weight:500">Practice Quiz</div><div style="font-size:12px;color:var(--text3)">Test your knowledge</div></div></a>
+          <a href="flashcards.html" class="card-sm" style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:8px;background:rgba(56,189,248,.15);display:flex;align-items:center;justify-content:center;font-size:18px">&#x1F0CF;</div><div><div style="font-size:13.5px;font-weight:500">Flashcards</div><div style="font-size:12px;color:var(--text3)">5 cards ready</div></div></a>
+          <a href="ai.html" class="card-sm" style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:8px;background:rgba(16,185,129,.15);display:flex;align-items:center;justify-content:center;font-size:18px">&#x1F916;</div><div><div style="font-size:13.5px;font-weight:500">Ask Cadence</div><div style="font-size:12px;color:var(--text3)">Your AI study companion</div></div></a>
+          <a href="community.html" class="card-sm" style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:8px;background:rgba(245,158,11,.15);display:flex;align-items:center;justify-content:center;font-size:18px">&#x270D;</div><div><div style="font-size:13.5px;font-weight:500">Create a Post</div><div style="font-size:12px;color:var(--text3)">Share knowledge</div></div></a>
         </div>
       </div>
     </div>
 
-    <!-- Today's tasks -->
     <div style="margin-top:20px">
-      <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">📋 Today's Tasks</div>
+      <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">Today's Tasks</div>
       <div class="card" id="task-list"></div>
     </div>
 
+    <div style="margin-top:20px">
+      <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:8px">Quick Note <span style="font-size:11px;font-weight:400;color:var(--accent2)">+2 XP per note</span></div>
+      <div class="card"><textarea class="form-input" id="quick-note" placeholder="Jot anything down — key terms, reminders, questions..." style="min-height:80px;border:none;background:transparent;padding:0;font-size:14px;width:100%"></textarea></div>
+    </div>
   </div>
 </div>
-
 <script src="app.js"></script>
 <script>
+if (!requireAuth()) { throw 0; }
 document.getElementById('sidebar-mount').innerHTML = buildSidebar('home');
+var user = Auth.current;
+document.getElementById('welcome-title').textContent = 'Welcome back, ' + user.name.split(' ')[0] + '!';
+document.getElementById('streak-sub').textContent    = 'You are on a ' + SS.streak + '-day streak. Keep it up!';
+document.getElementById('stat-streak').textContent   = SS.streak + ' days';
+document.getElementById('stat-today').textContent    = SS.todayMins + 'm';
+document.getElementById('stat-xp').textContent       = (user.xp||0).toLocaleString();
+document.getElementById('stat-bookmarks').textContent = SS.posts.filter(function(p){return p.bookmarked;}).length;
 
-const defaultTasks = [
-  {label:'Review Krebs Cycle notes', done:true,  mins:20},
+trackTypingXP(document.getElementById('quick-note'), 2);
+
+var defaultTasks = [
+  {label:'Review Krebs Cycle notes', done:true, mins:20},
   {label:'Complete 10 Biology practice questions', done:false, mins:25},
   {label:'Read Ch. 8: Molecular Genetics', done:false, mins:30},
-  {label:'Flashcard review — 20 cards', done:false, mins:15},
+  {label:'Flashcard review - 20 cards', done:false, mins:15},
   {label:'Watch video: DNA Replication', done:false, mins:20},
 ];
 
 function renderTasks() {
-  const done = defaultTasks.filter(t=>t.done).length;
-  SS.todayTasks = done;
-  document.getElementById('stat-tasks').textContent = `${done}/${defaultTasks.length} tasks done`;
-  document.getElementById('task-bar').style.width = `${(done/defaultTasks.length)*100}%`;
-  document.getElementById('task-list').innerHTML = defaultTasks.map((t,i)=>`
-    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);${i===defaultTasks.length-1?'border-bottom:none':''}">
-      <div onclick="toggleTask(${i})" style="width:20px;height:20px;border-radius:5px;border:1.5px solid ${t.done?'var(--success)':'var(--border2)'};background:${t.done?'var(--success)':'transparent'};display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:12px;flex-shrink:0">${t.done?'✓':''}</div>
-      <div style="flex:1;font-size:13.5px;color:${t.done?'var(--text3)':'var(--text)'};text-decoration:${t.done?'line-through':'none'}">${t.label}</div>
-      <div style="font-size:12px;color:var(--text3)">${t.mins}m</div>
-    </div>`).join('');
+  var done = defaultTasks.filter(function(t){return t.done;}).length;
+  document.getElementById('stat-tasks').textContent = done + '/' + defaultTasks.length + ' tasks done';
+  document.getElementById('task-bar').style.width = Math.round(done/defaultTasks.length*100) + '%';
+  document.getElementById('task-list').innerHTML = defaultTasks.map(function(t,i){
+    var last = i===defaultTasks.length-1;
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;' + (last?'':'border-bottom:1px solid var(--border)') + '">'
+      + '<div onclick="toggleTask(' + i + ')" style="width:20px;height:20px;border-radius:5px;border:1.5px solid ' + (t.done?'var(--success)':'var(--border2)') + ';background:' + (t.done?'var(--success)':'transparent') + ';display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:12px;flex-shrink:0">' + (t.done?'&#10003;':'') + '</div>'
+      + '<div style="flex:1;font-size:13.5px;color:' + (t.done?'var(--text3)':'var(--text)') + ';text-decoration:' + (t.done?'line-through':'none') + '">' + t.label + '</div>'
+      + '<div style="font-size:12px;color:var(--text3)">' + t.mins + 'm</div></div>';
+  }).join('');
 }
-
 function toggleTask(i) {
   defaultTasks[i].done = !defaultTasks[i].done;
-  renderTasks();
-  SS.save();
+  if (defaultTasks[i].done) Auth.addXP(10);
+  renderTasks(); SS.save();
 }
 
-// Stats
-document.getElementById('stat-streak').textContent = '🔥 ' + SS.streak;
-document.getElementById('stat-today').textContent  = SS.todayMins + 'm';
-document.getElementById('stat-xp').textContent     = SS.xp.toLocaleString();
-document.getElementById('stat-bookmarks').textContent = SS.posts.filter(p=>p.bookmarked).length;
-document.getElementById('streak-sub').textContent  = `You're on a ${SS.streak}-day streak. Keep it up!`;
-
-// Trending posts
-const top = SS.posts.slice().sort((a,b)=>b.votes-a.votes).slice(0,3);
-document.getElementById('trending-posts').innerHTML = top.map(p=>`
-  <a href="community.html" class="card-sm" style="display:block">
-    <div style="display:flex;gap:10px;align-items:flex-start">
-      <span class="badge badge-${catColor(p.cat)}">${p.cat}</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13.5px;font-weight:500;line-height:1.4;margin-bottom:3px">${p.title}</div>
-        <div style="font-size:12px;color:var(--text3)">▲ ${p.votes} · ${p.time} · 💬 ${p.comments}</div>
-      </div>
-    </div>
-  </a>`).join('');
+var top = SS.posts.slice().sort(function(a,b){return b.votes-a.votes;}).slice(0,3);
+document.getElementById('trending-posts').innerHTML = top.map(function(p){
+  var cmt = Array.isArray(p.comments) ? p.comments.length : (p.comments||0);
+  return '<a href="community.html" class="card-sm" style="display:block">'
+    + '<div style="display:flex;gap:10px;align-items:flex-start">'
+    + '<span class="badge badge-' + catColor(p.cat) + '">' + p.cat + '</span>'
+    + '<div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:500;line-height:1.4;margin-bottom:3px">' + p.title + '</div>'
+    + '<div style="font-size:12px;color:var(--text3)">&#x25B2; ' + p.votes + ' &middot; ' + p.time + ' &middot; ' + cmt + ' comments</div>'
+    + '</div></div></a>';
+}).join('');
 
 renderTasks();
 </script>

@@ -25,6 +25,7 @@
 <script src="app.js"></script>
 <script>
 document.getElementById('sidebar-mount').innerHTML = buildSidebar('study');
+if (!requireAuth()) { throw 0; }
 
 let obStep = 0;
 const obData = {};

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acadence AI — Admin Panel</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+  .admin-tabs { display:flex; border-bottom:1px solid var(--border); margin-bottom:20px; }
+  .admin-tab { padding:9px 18px; font-size:13px; color:var(--text3); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:.15s; }
+  .admin-tab.active { color:#f59e0b; border-color:#f59e0b; }
+  .admin-tab:hover:not(.active) { color:var(--text2); }
+  .admin-badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:600; }
+  .role-admin { background:rgba(245,158,11,.2); color:#fcd34d; }
+  .role-user  { background:rgba(108,99,255,.15); color:var(--accent2); }
+  table { width:100%; border-collapse:collapse; }
+  th { font-size:11px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:.05em; padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); }
+  td { padding:10px 12px; font-size:13px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(255,255,255,.02); }
+  .action-btn { padding:4px 10px; border-radius:6px; font-size:12px; font-weight:500; cursor:pointer; border:1px solid; margin-right:4px; transition:.15s; }
+  .btn-edit   { background:rgba(56,189,248,.1); color:#7dd3fc; border-color:rgba(56,189,248,.3); }
+  .btn-edit:hover { background:rgba(56,189,248,.2); }
+  .btn-delete { background:rgba(239,68,68,.1); color:#fca5a5; border-color:rgba(239,68,68,.3); }
+  .btn-delete:hover { background:rgba(239,68,68,.2); }
+  .btn-promote { background:rgba(245,158,11,.1); color:#fcd34d; border-color:rgba(245,158,11,.3); font-size:11px; }
+  .stat-pill { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:20px; font-size:11px; background:rgba(255,255,255,.05); color:var(--text2); }
+</style>
+</head>
+<body>
+<div id="sidebar-mount"></div>
+<div class="main">
+  <div class="page-header">
+    <div>
+      <div class="page-title" style="color:#f59e0b">⚙️ Admin Panel</div>
+      <div class="page-sub">Manage users, posts, and site content</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <div class="stat-pill" id="admin-user-count">0 users</div>
+      <div class="stat-pill" id="admin-post-count">0 posts</div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <!-- Stats row -->
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-card">
+        <div class="stat-label">Total Users</div>
+        <div class="stat-val" id="s-users">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Posts</div>
+        <div class="stat-val" id="s-posts">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total XP Given</div>
+        <div class="stat-val" id="s-xp">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Votes / Post</div>
+        <div class="stat-val" id="s-votes">0</div>
+      </div>
+    </div>
+
+    <div class="admin-tabs">
+      <div class="admin-tab active" onclick="showSection('users')">👥 Users</div>
+      <div class="admin-tab" onclick="showSection('posts')">📝 Posts</div>
+      <div class="admin-tab" onclick="showSection('settings')">🔧 Settings</div>
+    </div>
+
+    <!-- Users section -->
+    <div id="section-users">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-size:13px;color:var(--text2)" id="user-count-label"></div>
+        <input class="form-input" style="width:220px" placeholder="Search users..." oninput="renderUsers(this.value)" id="user-search"/>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <table>
+          <thead>
+            <tr>
+              <th>User</th><th>Email</th><th>Role</th><th>XP</th><th>Joined</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Posts section -->
+    <div id="section-posts" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="font-size:13px;color:var(--text2)" id="post-count-label"></div>
+        <input class="form-input" style="width:220px" placeholder="Search posts..." oninput="renderPosts(this.value)" id="post-search"/>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th><th>Author</th><th>Category</th><th>Votes</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="posts-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Settings section -->
+    <div id="section-settings" style="display:none">
+      <div class="grid-2">
+        <div class="card">
+          <div style="font-size:14px;font-weight:600;margin-bottom:16px">Site Settings</div>
+          <div class="form-group">
+            <label class="form-label">App Name</label>
+            <input class="form-input" id="set-appname" value="Acadence AI"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">AI Tutor Name</label>
+            <input class="form-input" id="set-tutorname" value="Cadence"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">XP per message typed</label>
+            <input class="form-input" type="number" id="set-xp" value="2" min="0" max="50"/>
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+        </div>
+        <div class="card">
+          <div style="font-size:14px;font-weight:600;margin-bottom:16px">Danger Zone</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <button class="btn" style="background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);text-align:left" onclick="clearAllPosts()">🗑️ Delete all posts</button>
+            <button class="btn" style="background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);text-align:left" onclick="clearAllChats()">🗑️ Clear all chat history</button>
+            <button class="btn" style="background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);text-align:left" onclick="resetXP()">↺ Reset all user XP</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Edit user modal -->
+<div id="edit-user-modal" style="display:none" class="overlay">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">Edit User</div>
+      <button class="btn-icon" onclick="closeModal('edit-user-modal')">&#x2715;</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Name</label>
+      <input class="form-input" id="eu-name"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input class="form-input" id="eu-email"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Role</label>
+      <select class="form-input" id="eu-role">
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">XP</label>
+      <input class="form-input" type="number" id="eu-xp" min="0"/>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-ghost" onclick="closeModal('edit-user-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveUserEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit post modal -->
+<div id="edit-post-modal" style="display:none" class="overlay">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">Edit Post</div>
+      <button class="btn-icon" onclick="closeModal('edit-post-modal')">&#x2715;</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input class="form-input" id="ep-title"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select class="form-input" id="ep-cat">
+        <option>Science</option><option>Math</option><option>History</option><option>CS</option><option>English</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Content</label>
+      <textarea class="form-input" id="ep-content" style="min-height:120px"></textarea>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-ghost" onclick="closeModal('edit-post-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePostEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+if (!requireAuth() || !Auth.isAdmin) { window.location.href = 'index.html'; }
+document.getElementById('sidebar-mount').innerHTML = buildSidebar('admin');
+
+let editingUserId = null;
+let editingPostId = null;
+let activeSection = 'users';
+
+function showSection(s) {
+  activeSection = s;
+  ['users','posts','settings'].forEach(x => {
+    document.getElementById('section-'+x).style.display = x===s ? 'block' : 'none';
+  });
+  document.querySelectorAll('.admin-tab').forEach((t,i) => {
+    t.classList.toggle('active', ['users','posts','settings'][i] === s);
+  });
+  if (s==='users')  renderUsers();
+  if (s==='posts')  renderPosts();
+}
+
+function loadStats() {
+  const users = Auth.getUsers();
+  const posts = SS.posts;
+  const totalXP = users.reduce((a,u) => a+(u.xp||0), 0);
+  const avgVotes = posts.length ? Math.round(posts.reduce((a,p)=>a+(p.votes||0),0)/posts.length) : 0;
+  document.getElementById('s-users').textContent = users.length;
+  document.getElementById('s-posts').textContent = posts.length;
+  document.getElementById('s-xp').textContent    = totalXP.toLocaleString();
+  document.getElementById('s-votes').textContent = avgVotes;
+  document.getElementById('admin-user-count').textContent = users.length + ' users';
+  document.getElementById('admin-post-count').textContent = posts.length + ' posts';
+}
+
+function renderUsers(q) {
+  q = (q||'').toLowerCase();
+  let users = Auth.getUsers();
+  if (q) users = users.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
+  document.getElementById('user-count-label').textContent = users.length + ' users';
+  document.getElementById('users-tbody').innerHTML = users.map(u => `
+    <tr>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div class="avatar" style="width:28px;height:28px;font-size:11px">${u.initials||'?'}</div>
+        <span style="font-weight:500">${u.name}</span>
+      </div></td>
+      <td style="color:var(--text2)">${u.email}</td>
+      <td><span class="admin-badge ${u.role==='admin'?'role-admin':'role-user'}">${u.role}</span></td>
+      <td><span style="color:var(--accent2)">${(u.xp||0).toLocaleString()}</span></td>
+      <td style="color:var(--text3)">${u.joined||'—'}</td>
+      <td>
+        <button class="action-btn btn-edit" onclick="openEditUser(${u.id})">Edit</button>
+        ${u.role!=='admin'?`<button class="action-btn btn-promote" onclick="promoteUser(${u.id})">Make Admin</button>`:''}
+        ${u.email!=='admin@acadence.ai'?`<button class="action-btn btn-delete" onclick="deleteUser(${u.id})">Delete</button>`:''}
+      </td>
+    </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:24px">No users found</td></tr>';
+}
+
+function renderPosts(q) {
+  q = (q||'').toLowerCase();
+  let posts = SS.posts;
+  if (q) posts = posts.filter(p => p.title.toLowerCase().includes(q) || p.author.toLowerCase().includes(q));
+  document.getElementById('post-count-label').textContent = posts.length + ' posts';
+  document.getElementById('posts-tbody').innerHTML = posts.map(p => `
+    <tr>
+      <td style="max-width:260px"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.title}</div></td>
+      <td style="color:var(--text2)">${p.author}</td>
+      <td><span class="badge badge-${catColor(p.cat)}">${p.cat}</span></td>
+      <td><span style="color:${p.votes>100?'var(--success)':'var(--text2)'}">&#x25B2; ${p.votes}</span></td>
+      <td>
+        <button class="action-btn btn-edit" onclick="openEditPost(${p.id})">Edit</button>
+        <button class="action-btn btn-delete" onclick="deletePost(${p.id})">Delete</button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:24px">No posts found</td></tr>';
+}
+
+function openEditUser(id) {
+  const u = Auth.getUsers().find(u => u.id === id);
+  if (!u) return;
+  editingUserId = id;
+  document.getElementById('eu-name').value  = u.name;
+  document.getElementById('eu-email').value = u.email;
+  document.getElementById('eu-role').value  = u.role;
+  document.getElementById('eu-xp').value    = u.xp || 0;
+  document.getElementById('edit-user-modal').style.display = 'flex';
+}
+
+function saveUserEdit() {
+  const users = Auth.getUsers().map(u => {
+    if (u.id !== editingUserId) return u;
+    return { ...u,
+      name:     document.getElementById('eu-name').value.trim(),
+      email:    document.getElementById('eu-email').value.trim(),
+      role:     document.getElementById('eu-role').value,
+      xp:       parseInt(document.getElementById('eu-xp').value)||0,
+      initials: document.getElementById('eu-name').value.trim().split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2)
+    };
+  });
+  localStorage.setItem('ac_users', JSON.stringify(users));
+  closeModal('edit-user-modal'); renderUsers(); loadStats();
+}
+
+function deleteUser(id) {
+  if (!confirm('Delete this user permanently?')) return;
+  const users = Auth.getUsers().filter(u => u.id !== id);
+  localStorage.setItem('ac_users', JSON.stringify(users));
+  renderUsers(); loadStats();
+}
+
+function promoteUser(id) {
+  if (!confirm('Make this user an admin?')) return;
+  const users = Auth.getUsers().map(u => u.id===id ? {...u, role:'admin'} : u);
+  localStorage.setItem('ac_users', JSON.stringify(users));
+  renderUsers();
+}
+
+function openEditPost(id) {
+  const posts = SS.posts;
+  const p = posts.find(p => p.id === id);
+  if (!p) return;
+  editingPostId = id;
+  document.getElementById('ep-title').value   = p.title;
+  document.getElementById('ep-cat').value     = p.cat;
+  document.getElementById('ep-content').value = p.content;
+  document.getElementById('edit-post-modal').style.display = 'flex';
+}
+
+function savePostEdit() {
+  const posts = SS.posts.map(p => {
+    if (p.id !== editingPostId) return p;
+    return { ...p,
+      title:   document.getElementById('ep-title').value.trim(),
+      cat:     document.getElementById('ep-cat').value,
+      content: document.getElementById('ep-content').value.trim()
+    };
+  });
+  SS.posts = posts;
+  closeModal('edit-post-modal'); renderPosts(); loadStats();
+}
+
+function deletePost(id) {
+  if (!confirm('Delete this post permanently?')) return;
+  SS.posts = SS.posts.filter(p => p.id !== id);
+  renderPosts(); loadStats();
+}
+
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+function clearAllPosts() {
+  if (!confirm('Delete ALL posts? This cannot be undone.')) return;
+  SS.posts = []; renderPosts(); loadStats();
+}
+
+function clearAllChats() {
+  if (!confirm('Clear all chat history?')) return;
+  localStorage.removeItem('ss_chat'); alert('Chat history cleared.');
+}
+
+function resetXP() {
+  if (!confirm('Reset XP to 0 for all non-admin users?')) return;
+  const users = Auth.getUsers().map(u => u.role==='admin' ? u : {...u, xp:0});
+  localStorage.setItem('ac_users', JSON.stringify(users));
+  loadStats(); alert('XP reset.');
+}
+
+function saveSettings() { alert('Settings saved! (In a real backend these would persist globally.)'); }
+
+loadStats();
+renderUsers();
+</script>
+</body>
+</html>

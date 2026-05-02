@@ -61,26 +61,10 @@
       </div>
     </div>
 
-    <!-- Badges -->
+        <!-- Badges -->
     <div style="margin-top:16px">
-      <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">🏅 Badges Earned</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        ${[
-          {icon:'🔥',name:'Week Warrior',   desc:'7-day streak'},
-          {icon:'📚',name:'Knowledge Seeker',desc:'10 posts read'},
-          {icon:'⚡',name:'Quick Learner',  desc:'First quiz aced'},
-          {icon:'🌟',name:'Contributor',    desc:'First post created'},
-          {icon:'🎯',name:'On Target',      desc:'Study goal met 5×'},
-          {icon:'🤖',name:'AI Explorer',    desc:'First AI chat'},
-        ].map(b=>`
-          <div class="card-sm" style="display:flex;align-items:center;gap:10px;min-width:155px">
-            <div style="font-size:24px">${b.icon}</div>
-            <div>
-              <div style="font-size:13px;font-weight:500">${b.name}</div>
-              <div style="font-size:11px;color:var(--text3)">${b.desc}</div>
-            </div>
-          </div>`).join('')}
-      </div>
+      <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">Badges Earned</div>
+      <div id="badges-container"></div>
     </div>
 
     <!-- Log today -->
@@ -102,6 +86,7 @@
 <script src="app.js"></script>
 <script>
 document.getElementById('sidebar-mount').innerHTML = buildSidebar('progress');
+if (!requireAuth()) { throw 0; }
 
 const weekData = [
   {date:'Mon', mins:45,  tasks:3, done:true},
@@ -145,6 +130,8 @@ function logStudy() {
   SS.save();
   document.getElementById('log-feedback').textContent = `✓ Logged ${mins} minutes! +${Math.round(mins/2)} XP earned.`;
 }
+
+document.getElementById('badges-container').innerHTML = renderBadges();
 </script>
 </body>
 </html>

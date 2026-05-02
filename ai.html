@@ -33,6 +33,7 @@
 <script src="app.js"></script>
 <script>
 document.getElementById('sidebar-mount').innerHTML = buildSidebar('ai');
+if (!requireAuth()) { throw 0; }
 
 const QUICK = [
   'Explain the Krebs cycle step by step',
@@ -56,7 +57,7 @@ function renderMessages() {
   area.scrollTop = area.scrollHeight;
 }
 
-function send() {
+function send() { Auth.addXP(3);
   const inp  = document.getElementById('ai-input');
   const text = inp.value.trim();
   if (!text) return;

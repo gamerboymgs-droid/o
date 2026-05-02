@@ -27,6 +27,7 @@
 <script src="app.js"></script>
 <script>
 document.getElementById('sidebar-mount').innerHTML = buildSidebar('leaderboard');
+if (!requireAuth()) { throw 0; }
 
 const USERS = [
   {name:'Priya L.',  xp:5240, level:12, streak:14, avatar:'PL'},

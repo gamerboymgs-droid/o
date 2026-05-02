@@ -70,6 +70,7 @@
 <script src="app.js"></script>
 <script>
 document.getElementById('sidebar-mount').innerHTML = buildSidebar('flashcards');
+if (!requireAuth()) { throw 0; }
 
 const CARDS = [
   {front:'What is the powerhouse of the cell?',         back:'The mitochondria — produces ATP via cellular respiration (Krebs cycle + electron transport chain).', subj:'Biology'},
