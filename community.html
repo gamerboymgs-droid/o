@@ -5,97 +5,237 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Acadence — Knowledge Hub</title>
 <link rel="stylesheet" href="style.css"/>
+<style>
+.editor-page{display:none;flex-direction:column;height:100vh;overflow:hidden}
+.editor-page.open{display:flex}
+.hub-page{flex-direction:column}
+.post-view{display:none}
+.post-view.open{display:block}
+
+.editor-topbar{padding:12px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--surface);flex-shrink:0;flex-wrap:wrap}
+.editor-title-bar{padding:18px 24px 0;background:var(--surface);flex-shrink:0}
+.editor-title-input{width:100%;font-family:var(--display);font-size:24px;font-weight:600;color:var(--text);background:transparent;border:none;outline:none;padding-bottom:14px;line-height:1.2}
+.editor-title-input::placeholder{color:var(--text3)}
+
+.toolbar{display:flex;gap:2px;padding:7px 24px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;flex-wrap:wrap;align-items:center}
+.tb{width:28px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:4px;background:transparent;border:none;cursor:pointer;color:var(--text2);font-size:12px;font-weight:600;font-family:var(--font);transition:.1s}
+.tb:hover{background:var(--card2);color:var(--text)}
+.tbw{width:auto;padding:0 8px;font-size:11px}
+.tsep{width:1px;height:18px;background:var(--border);margin:0 3px;align-self:center}
+
+.editor-body-wrap{flex:1;overflow-y:auto;background:var(--bg);display:flex;justify-content:center}
+.editor-body{width:100%;max-width:800px;padding:24px 28px 80px}
+
+#ec{min-height:420px;outline:none;font-size:15px;line-height:1.85;color:var(--text);font-family:var(--font);caret-color:var(--accent)}
+#ec:empty::before{content:attr(data-placeholder);color:var(--text3);pointer-events:none}
+#ec h1{font-family:var(--display);font-size:22px;font-weight:600;margin:22px 0 8px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+#ec h2{font-family:var(--display);font-size:18px;font-weight:600;margin:18px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+#ec h3{font-family:var(--display);font-size:15px;font-weight:600;margin:14px 0 4px}
+#ec p{margin-bottom:12px}
+#ec ul,#ec ol{margin:10px 0 12px 26px}
+#ec li{margin-bottom:4px;line-height:1.7}
+#ec blockquote{border-left:3px solid var(--accent);margin:14px 0;padding:10px 16px;background:var(--accentlt);border-radius:0 6px 6px 0;color:var(--text2);font-style:italic}
+#ec code{background:var(--card2);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:monospace;font-size:13px;color:var(--accent)}
+#ec pre{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:12px 0;overflow-x:auto}
+#ec pre code{background:none;border:none;padding:0;color:var(--text)}
+#ec table{border-collapse:collapse;width:100%;margin:14px 0}
+#ec th,#ec td{border:1px solid var(--border);padding:8px 12px;font-size:13px}
+#ec th{background:var(--card2);font-weight:600}
+#ec mark{background:#fef08a;padding:0 2px;border-radius:2px}
+#ec hr{border:none;border-top:1px solid var(--border);margin:18px 0}
+#ec a{color:var(--blue);text-decoration:underline}
+#ec .callout{border-radius:8px;padding:12px 16px;margin:14px 0;border:1px solid}
+#ec .callout-tip{background:#f0fdf4;border-color:#86efac}
+#ec .callout-warn{background:#fffbeb;border-color:#fde68a}
+#ec .callout-info{background:var(--bluelt);border-color:#bfdbfe}
+#ec .callout-label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+#ec .callout-tip .callout-label{color:var(--green)}
+#ec .callout-warn .callout-label{color:var(--amber)}
+#ec .callout-info .callout-label{color:var(--blue)}
+
+.wc{font-size:11px;color:var(--text3);padding:5px 24px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0}
+
+/* Post view */
+.pv-header{padding:24px 28px 18px;border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;justify-content:space-between}
+.pv-body{display:grid;grid-template-columns:1fr 240px;align-items:start}
+.pv-article{padding:24px 28px;border-right:1px solid var(--border);min-height:60vh}
+.pv-sidebar{padding:18px 16px;position:sticky;top:0}
+
+.rendered h1{font-family:var(--display);font-size:22px;font-weight:600;margin:22px 0 8px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.rendered h2{font-family:var(--display);font-size:18px;font-weight:600;margin:18px 0 6px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.rendered h3{font-family:var(--display);font-size:15px;font-weight:600;margin:14px 0 4px}
+.rendered p{margin-bottom:14px;font-size:14.5px;line-height:1.85}
+.rendered ul,.rendered ol{margin:10px 0 14px 26px}
+.rendered li{margin-bottom:5px;line-height:1.75;font-size:14px}
+.rendered blockquote{border-left:3px solid var(--accent);margin:16px 0;padding:10px 16px;background:var(--accentlt);border-radius:0 6px 6px 0;color:var(--text2);font-style:italic}
+.rendered code{background:var(--card2);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:monospace;font-size:13px;color:var(--accent)}
+.rendered pre{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:14px 0;overflow-x:auto}
+.rendered pre code{background:none;border:none;padding:0;color:var(--text)}
+.rendered table{border-collapse:collapse;width:100%;margin:16px 0}
+.rendered th,.rendered td{border:1px solid var(--border);padding:9px 12px;font-size:13.5px}
+.rendered th{background:var(--card2);font-weight:600}
+.rendered hr{border:none;border-top:1px solid var(--border);margin:20px 0}
+.rendered mark{background:#fef08a;padding:0 2px;border-radius:2px}
+.rendered a{color:var(--blue);text-decoration:underline}
+.rendered .callout{border-radius:8px;padding:13px 16px;margin:16px 0;border:1px solid}
+.rendered .callout-tip{background:#f0fdf4;border-color:#86efac}
+.rendered .callout-warn{background:#fffbeb;border-color:#fde68a}
+.rendered .callout-info{background:var(--bluelt);border-color:#bfdbfe}
+.rendered .callout-label{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.rendered .callout-tip .callout-label{color:var(--green)}
+.rendered .callout-warn .callout-label{color:var(--amber)}
+.rendered .callout-info .callout-label{color:var(--blue)}
+
+.toc{background:var(--card2);border-radius:8px;padding:12px 14px;margin-bottom:12px}
+.toc-title{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.toc a{display:block;font-size:12.5px;color:var(--text2);padding:3px 0 3px 10px;border-left:2px solid transparent;transition:.1s}
+.toc a:hover{color:var(--accent);border-color:var(--accent)}
+.toc a.h3{padding-left:22px;font-size:11.5px}
+
+.cmt-section{border-top:1px solid var(--border);padding:24px 28px}
+.cmt-item{display:flex;gap:12px;padding:16px 0;border-bottom:1px solid var(--border)}
+.cmt-item:last-of-type{border-bottom:none}
+.cmt-body{flex:1}
+.reply-thread{margin-left:40px;border-left:2px solid var(--border);padding-left:14px;margin-top:10px}
+.reply-item{padding:8px 0;border-bottom:1px solid var(--border)}
+.reply-item:last-child{border-bottom:none}
+.cmt-composer{background:var(--card2);border-radius:8px;padding:12px 14px;margin-top:14px}
+.cmt-composer textarea{width:100%;min-height:80px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:14px;color:var(--text);font-family:var(--font);line-height:1.6;resize:vertical;transition:.12s}
+.cmt-composer textarea:focus{border-color:var(--accent);outline:none}
+
+@media(max-width:760px){.pv-body{grid-template-columns:1fr}.pv-sidebar{display:none}.pv-article{padding:16px;border-right:none}.cmt-section{padding:16px}}
+</style>
 </head>
 <body>
 <div id="sidebar-mount"></div>
-<div class="main">
+
+<!-- HUB -->
+<div class="main hub-page" id="hub-view" style="display:flex">
   <div class="page-header">
-    <div>
-      <div class="page-title">Knowledge Hub</div>
-      <div class="page-sub">Community guides, strategies, and insights for AP &amp; SAT/ACT prep</div>
-    </div>
-    <button class="btn btn-primary btn-sm" onclick="openNewPost()">New Post</button>
+    <div><div class="page-title">Knowledge Hub</div><div class="page-sub">In-depth guides, strategies, and worked examples for AP &amp; SAT/ACT prep</div></div>
+    <button class="btn btn-primary btn-sm" onclick="openEditor()">Write a Post</button>
   </div>
   <div class="page-content">
-
     <div style="display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap">
-      <div class="search-wrap" style="flex:1;max-width:340px">
-        <span class="search-icon">&#x2315;</span>
-        <input type="text" id="search-input" placeholder="Search posts..." oninput="renderPosts()"/>
-      </div>
+      <div class="search-wrap" style="flex:1;max-width:320px"><span class="search-icon"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input type="text" id="search-input" placeholder="Search posts..." oninput="renderPosts()"/></div>
       <div id="cat-filters" style="display:flex;gap:6px;flex-wrap:wrap"></div>
     </div>
-
     <div class="tabs">
-      <div class="tab active" id="tab-newest"    onclick="setTab('newest')">Newest</div>
-      <div class="tab"        id="tab-top"       onclick="setTab('top')">Top Voted</div>
-      <div class="tab"        id="tab-tests"     onclick="setTab('tests')">Practice Tests</div>
-      <div class="tab"        id="tab-bookmarked"onclick="setTab('bookmarked')">Saved</div>
+      <div class="tab active" id="tab-newest" onclick="setTab('newest')">Newest</div>
+      <div class="tab" id="tab-top" onclick="setTab('top')">Most Voted</div>
+      <div class="tab" id="tab-tests" onclick="setTab('tests')">Practice Tests</div>
+      <div class="tab" id="tab-bookmarked" onclick="setTab('bookmarked')">Saved</div>
     </div>
-
-    <div style="display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start">
+    <div style="display:grid;grid-template-columns:1fr 250px;gap:20px;align-items:start">
       <div id="post-list" style="display:flex;flex-direction:column;gap:8px"></div>
-
-      <!-- Sidebar info -->
-      <div style="display:flex;flex-direction:column;gap:14px;position:sticky;top:24px">
-        <div class="card">
-          <div style="font-size:13px;font-weight:600;margin-bottom:12px">Exam Resources</div>
-          <a href="exams.html?type=AP"  style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)"><span class="badge badge-amber">AP</span> AP Exam Library</a>
-          <a href="exams.html?type=SAT" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)"><span class="badge badge-blue">SAT</span> SAT Resources</a>
-          <a href="exams.html?type=ACT" style="display:flex;align-items:center;gap:8px;padding:8px 0;font-size:13px;color:var(--text2)"><span class="badge badge-green">ACT</span> ACT Resources</a>
+      <div style="display:flex;flex-direction:column;gap:12px;position:sticky;top:24px">
+        <div class="card" style="padding:16px 18px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Exam Resources</div>
+          <a href="exams.html?type=AP"  style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)"><span class="badge badge-amber">AP</span> AP Exam Library</a>
+          <a href="exams.html?type=SAT" style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)"><span class="badge badge-blue">SAT</span> SAT Resources</a>
+          <a href="exams.html?type=ACT" style="display:flex;align-items:center;gap:8px;padding:7px 0;font-size:13px;color:var(--text2)"><span class="badge badge-green">ACT</span> ACT Resources</a>
         </div>
-        <div class="card">
-          <div style="font-size:13px;font-weight:600;margin-bottom:10px">Top Contributors</div>
+        <div class="card" style="padding:16px 18px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Top Contributors</div>
           <div id="top-contributors"></div>
         </div>
-        <div class="card-flat">
-          <div style="font-size:12px;font-weight:600;color:var(--text3);margin-bottom:6px">POSTING GUIDELINES</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.6">Be accurate and cite sources where possible. Practice test content should credit the original publisher. FRQ solutions should include scoring rubrics.</div>
+        <div class="card" style="background:var(--accentlt);border-color:#fbd0c0;padding:14px 16px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin-bottom:6px">Write a Guide</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px">Posts support headings, lists, callout boxes, and tables — write Wikipedia-style long-form guides.</div>
+          <button class="btn btn-primary btn-xs" onclick="openEditor()">Start Writing</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- New Post Modal -->
-<div id="new-post-modal" style="display:none" class="overlay">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-header">
-      <div class="modal-title">Create a Post</div>
-      <button class="btn-icon" onclick="closeNewPost()">&#x2715;</button>
+<!-- EDITOR -->
+<div class="main editor-page" id="editor-view">
+  <div class="editor-topbar">
+    <button class="btn btn-ghost btn-sm" onclick="closeEditor()"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12,19 5,12 12,5"/></svg> Back</button>
+    <div style="display:flex;gap:8px;flex:1;flex-wrap:wrap;align-items:center">
+      <select id="ed-examtype" style="font-family:var(--font);font-size:12px;color:var(--text2);background:var(--card2);border:1px solid var(--border);border-radius:5px;padding:4px 8px;cursor:pointer"><option value="AP">AP Exam</option><option value="SAT">SAT</option><option value="ACT">ACT</option><option value="General">General Prep</option></select>
+      <input id="ed-cat" placeholder="Subject (e.g. AP Biology)" style="font-family:var(--font);font-size:13px;color:var(--text);background:var(--card2);border:1px solid var(--border);border-radius:5px;padding:4px 10px;min-width:180px"/>
+      <input id="ed-tags" placeholder="Tags: FRQ, Unit 3, 2024" style="font-family:var(--font);font-size:13px;color:var(--text);background:var(--card2);border:1px solid var(--border);border-radius:5px;padding:4px 10px;min-width:160px"/>
     </div>
-    <div class="form-group">
-      <label class="form-label">Exam Type</label>
-      <select class="form-input" id="np-examtype">
-        <option value="AP">AP Exam</option><option value="SAT">SAT</option><option value="ACT">ACT</option><option value="General">General Prep</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Subject / Category</label>
-      <input class="form-input" id="np-cat" placeholder="e.g. AP Biology, SAT Math, ACT Science..."/>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Title</label>
-      <input class="form-input" id="np-title" placeholder="Clear, specific title"/>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Content</label>
-      <textarea class="form-input" id="np-content" style="min-height:140px" placeholder="Share strategies, explanations, notes, or exam content..."></textarea>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Tags (comma separated)</label>
-      <input class="form-input" id="np-tags" placeholder="e.g. FRQ, Unit 3, 2024"/>
-    </div>
-    <div style="display:flex;gap:10px;justify-content:flex-end">
-      <button class="btn btn-ghost" onclick="closeNewPost()">Cancel</button>
-      <button class="btn btn-primary" onclick="submitPost()">Publish Post</button>
+    <div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" onclick="saveDraft()">Save Draft</button><button class="btn btn-primary btn-sm" onclick="publishPost()">Publish</button></div>
+  </div>
+  <div class="editor-title-bar">
+    <input class="editor-title-input" id="ed-title" placeholder="Post title..." maxlength="140"/>
+  </div>
+  <div class="toolbar">
+    <button class="tb tbw" onclick="fmt('formatBlock','H1')">H1</button>
+    <button class="tb tbw" onclick="fmt('formatBlock','H2')">H2</button>
+    <button class="tb tbw" onclick="fmt('formatBlock','H3')">H3</button>
+    <button class="tb tbw" onclick="fmt('formatBlock','P')">P</button>
+    <div class="tsep"></div>
+    <button class="tb" onclick="fmt('bold')" title="Bold"><b>B</b></button>
+    <button class="tb" onclick="fmt('italic')" title="Italic"><i>I</i></button>
+    <button class="tb" onclick="fmt('underline')" title="Underline"><u>U</u></button>
+    <button class="tb" onclick="fmt('strikeThrough')" title="Strike"><s>S</s></button>
+    <button class="tb" onclick="doMark()" title="Highlight" style="font-size:16px">&#x2591;</button>
+    <div class="tsep"></div>
+    <button class="tb" onclick="fmt('insertUnorderedList')" title="Bullet list"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor"/><circle cx="4" cy="12" r="1.5" fill="currentColor"/><circle cx="4" cy="18" r="1.5" fill="currentColor"/></svg></button>
+    <button class="tb" onclick="fmt('insertOrderedList')" title="Numbered list"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></button>
+    <div class="tsep"></div>
+    <button class="tb" onclick="doBlockquote()" title="Quote"><svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg></button>
+    <button class="tb" onclick="doCode()" title="Code"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16,18 22,12 16,6"/><polyline points="8,6 2,12 8,18"/></svg></button>
+    <button class="tb" onclick="doHR()" title="Divider" style="font-size:14px">—</button>
+    <button class="tb" onclick="doTable()" title="Table"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="12" y1="3" x2="12" y2="21"/></svg></button>
+    <div class="tsep"></div>
+    <button class="tb tbw" onclick="doCallout('tip')" style="color:var(--green)">TIP</button>
+    <button class="tb tbw" onclick="doCallout('warn')" style="color:var(--amber)">NOTE</button>
+    <button class="tb tbw" onclick="doCallout('info')" style="color:var(--blue)">INFO</button>
+    <div class="tsep"></div>
+    <button class="tb" onclick="doLink()" title="Link"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></button>
+    <button class="tb tbw" onclick="fmt('removeFormat')" style="font-size:11px">Clear</button>
+  </div>
+  <div class="editor-body-wrap">
+    <div class="editor-body">
+      <div id="ec" contenteditable="true" data-placeholder="Start writing your post... Use H1/H2 to create sections, TIP/NOTE/INFO boxes to highlight key exam strategies, and tables for score breakdowns."></div>
     </div>
   </div>
+  <div class="wc" id="wc">0 words</div>
 </div>
 
-<!-- View Post Modal -->
-<div id="view-modal" style="display:none" class="overlay" onclick="closeViewPost()">
-  <div class="modal" id="view-content" onclick="event.stopPropagation()"></div>
+<!-- POST VIEW -->
+<div class="main post-view" id="post-view">
+  <div class="pv-header">
+    <div style="flex:1">
+      <div style="display:flex;gap:8px;margin-bottom:10px" id="pv-meta"></div>
+      <h1 style="font-family:var(--display);font-size:26px;font-weight:600;line-height:1.2;margin-bottom:10px" id="pv-title"></h1>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap" id="pv-byline"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-shrink:0">
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-sm" onclick="closePost()"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12,19 5,12 12,5"/></svg> Back</button>
+        <button class="btn btn-ghost btn-sm" id="pv-bm" onclick="pvBookmark()">Save</button>
+        <button class="btn btn-primary btn-sm" id="pv-edit-btn" onclick="editCurrentPost()">Edit</button>
+      </div>
+      <div style="display:flex;gap:4px;align-items:center">
+        <button class="vote-btn" id="pv-up" onclick="pvVote(1)">&#x25B2;</button>
+        <span style="font-size:13px;font-weight:600;color:var(--text2);min-width:24px;text-align:center" id="pv-votes">0</span>
+        <button class="vote-btn" id="pv-dn" onclick="pvVote(-1)">&#x25BC;</button>
+      </div>
+    </div>
+  </div>
+  <div class="pv-body">
+    <div class="pv-article"><div class="rendered" id="pv-content"></div></div>
+    <div class="pv-sidebar">
+      <div class="toc" id="pv-toc" style="display:none"><div class="toc-title">Contents</div><div id="toc-links"></div></div>
+      <div class="card-sm" id="pv-info" style="margin-bottom:12px"></div>
+      <div class="card-sm"><div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Related</div><div id="pv-related"></div></div>
+    </div>
+  </div>
+  <div class="cmt-section">
+    <div style="font-size:16px;font-weight:600;font-family:var(--display);margin-bottom:18px" id="pv-cmt-count">Discussion</div>
+    <div id="pv-cmts"></div>
+    <div class="cmt-composer">
+      <div style="font-size:13px;font-weight:600;margin-bottom:8px">Leave a comment</div>
+      <textarea id="pv-cmt-inp" placeholder="Share a question, correction, or insight about this post..."></textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px;gap:10px"><span style="font-size:12px;color:var(--text3);align-self:center">+5 XP</span><button class="btn btn-primary btn-sm" onclick="submitCmt()">Post Comment</button></div>
+    </div>
+  </div>
 </div>
 
 <script src="app.js"></script>
@@ -104,122 +244,211 @@ if (!requireAuth()) throw 0;
 document.getElementById('sidebar-mount').innerHTML = buildSidebar('community');
 trackTypingXP(document.getElementById('search-input'), 1);
 
-var cats = ['All','AP','SAT','ACT','General'];
-var activeCat = 'All', activeTab = 'newest';
+var activeCat='All', activeTab='newest', currentPid=null, draft='';
 
-document.getElementById('cat-filters').innerHTML = cats.map(function(c){
-  return '<button class="subject-pill ' + (c==='All'?'active':'') + '" id="cat-'+c+'" onclick="setCat(\''+c+'\')">' + c + '</button>';
-}).join('');
-
-function setCat(c) {
-  activeCat = c;
-  cats.forEach(function(x){ var b=document.getElementById('cat-'+x); if(b) b.classList.toggle('active',x===c); });
-  renderPosts();
+function showView(v) {
+  document.getElementById('hub-view').style.display    = v==='hub'    ? 'flex'  : 'none';
+  document.getElementById('editor-view').classList.toggle('open', v==='editor');
+  document.getElementById('post-view').style.display   = v==='post'   ? 'block' : 'none';
+  if(v!=='editor') document.getElementById('editor-view').classList.remove('open');
+  window.scrollTo(0,0);
 }
 
-function setTab(t) {
-  activeTab = t;
-  ['newest','top','tests','bookmarked'].forEach(function(x){
-    document.getElementById('tab-'+x).classList.toggle('active',x===t);
-  });
-  renderPosts();
+/* HUB */
+var cats=['All','AP','SAT','ACT','General'];
+document.getElementById('cat-filters').innerHTML = cats.map(function(c){ return '<button class="subject-pill '+(c==='All'?'active':'')+'" id="cat-'+c+'" onclick="setCat(\''+c+'\')">'+c+'</button>'; }).join('');
+
+function setCat(c){activeCat=c;cats.forEach(function(x){var b=document.getElementById('cat-'+x);if(b)b.classList.toggle('active',x===c)});renderPosts();}
+function setTab(t){activeTab=t;['newest','top','tests','bookmarked'].forEach(function(x){document.getElementById('tab-'+x).classList.toggle('active',x===t)});renderPosts();}
+
+function renderPosts(){
+  var q=(document.getElementById('search-input').value||'').toLowerCase();
+  var posts=SS.posts.slice();
+  if(activeCat==='AP'||activeCat==='SAT'||activeCat==='ACT') posts=posts.filter(function(p){return p.examType===activeCat;});
+  else if(activeCat==='General') posts=posts.filter(function(p){return !p.examType||p.examType==='General';});
+  if(q) posts=posts.filter(function(p){return p.title.toLowerCase().indexOf(q)!==-1||(p.content||'').toLowerCase().indexOf(q)!==-1;});
+  if(activeTab==='top') posts.sort(function(a,b){return b.votes-a.votes;});
+  if(activeTab==='tests') posts=posts.filter(function(p){return p.isPracticeTest;});
+  if(activeTab==='bookmarked') posts=posts.filter(function(p){return p.bookmarked;});
+  document.getElementById('post-list').innerHTML = posts.length ? posts.map(cardHTML).join('') : '<div style="padding:48px;text-align:center;color:var(--text3);font-size:14px">No posts found.</div>';
 }
 
-function renderPosts() {
-  var q = (document.getElementById('search-input').value||'').toLowerCase();
-  var posts = SS.posts.slice();
-  if (activeCat==='AP'||activeCat==='SAT'||activeCat==='ACT') posts = posts.filter(function(p){return p.examType===activeCat;});
-  else if (activeCat==='General') posts = posts.filter(function(p){return !p.examType||p.examType==='General';});
-  if (q) posts = posts.filter(function(p){return p.title.toLowerCase().indexOf(q)!==-1||p.content.toLowerCase().indexOf(q)!==-1;});
-  if (activeTab==='top')       posts.sort(function(a,b){return b.votes-a.votes;});
-  if (activeTab==='tests')     posts = posts.filter(function(p){return p.isPracticeTest;});
-  if (activeTab==='bookmarked')posts = posts.filter(function(p){return p.bookmarked;});
+function strip(html){ var d=document.createElement('div');d.innerHTML=html;return d.textContent||d.innerText||''; }
 
-  document.getElementById('post-list').innerHTML = posts.length ? posts.map(postCardHTML).join('') : '<div style="padding:48px;text-align:center;color:var(--text3)">No posts match your filter.</div>';
-}
-
-function postCardHTML(p) {
-  var cmt = Array.isArray(p.comments)?p.comments.length:(p.comments||0);
-  return '<div class="post-card" onclick="openPost(' + p.id + ')">'
-    + '<div class="vote-col">'
-    + '<button class="vote-btn ' + (p.voted===1?'active-up':'') + '" onclick="event.stopPropagation();vote(' + p.id + ',1)">&#x25B2;</button>'
-    + '<span class="vote-count">' + p.votes + '</span>'
-    + '<button class="vote-btn ' + (p.voted===-1?'active-dn':'') + '" onclick="event.stopPropagation();vote(' + p.id + ',-1)">&#x25BC;</button>'
-    + '</div>'
-    + '<div class="post-body">'
-    + '<div class="post-meta">'
-    + '<span class="badge badge-' + catColor(p.cat) + '">' + (p.examType||'') + '</span>'
-    + '<span style="font-size:12px;color:var(--text2)">' + p.cat + '</span>'
-    + (p.isPracticeTest?'<span class="badge badge-orange">Practice Test</span>':'')
-    + '</div>'
-    + '<div class="post-title">' + p.title + '</div>'
-    + '<div class="post-excerpt">' + p.content + '</div>'
-    + '<div class="post-footer">'
-    + '<span class="post-stat">' + p.author + '</span>'
-    + '<span class="post-stat">' + cmt + ' comments</span>'
-    + '<span class="post-stat">' + p.time + '</span>'
-    + '<button class="btn btn-ghost btn-xs" style="margin-left:auto" onclick="event.stopPropagation();bookmark(' + p.id + ')">' + (p.bookmarked?'Saved':'Save') + '</button>'
-    + '</div></div></div>';
+function cardHTML(p){
+  var cmt=Array.isArray(p.comments)?p.comments.length:(p.comments||0);
+  var excerpt=strip(p.content||'').substring(0,200)+'…';
+  return '<div class="post-card" onclick="openPost('+p.id+')">'
+    +'<div class="vote-col"><button class="vote-btn '+(p.voted===1?'active-up':'')+'" onclick="event.stopPropagation();vote('+p.id+',1)">&#x25B2;</button><span class="vote-count">'+p.votes+'</span><button class="vote-btn '+(p.voted===-1?'active-dn':'')+'" onclick="event.stopPropagation();vote('+p.id+',-1)">&#x25BC;</button></div>'
+    +'<div class="post-body">'
+    +'<div class="post-meta"><span class="badge badge-'+catColor(p.cat)+'">'+(p.examType||'')+'</span><span style="font-size:12px;color:var(--text2)">'+p.cat+'</span>'+(p.isPracticeTest?'<span class="badge badge-orange">Practice Test</span>':'')+'</div>'
+    +'<div class="post-title">'+p.title+'</div>'
+    +'<div class="post-excerpt">'+excerpt+'</div>'
+    +'<div class="post-footer"><span class="post-stat">'+p.author+'</span><span class="post-stat">'+cmt+' comments</span><span class="post-stat">'+p.time+'</span><button class="btn btn-ghost btn-xs" style="margin-left:auto" onclick="event.stopPropagation();bmark('+p.id+')">'+(p.bookmarked?'Saved':'Save')+'</button></div>'
+    +'</div></div>';
 }
 
-function vote(id,dir) {
-  var posts=SS.posts, p=posts.find(function(p){return p.id===id;});
-  if(!p) return;
-  if(p.voted===dir){p.votes-=dir;p.voted=0;}else{p.votes+=dir-p.voted;p.voted=dir;}
-  SS.posts=posts; renderPosts();
-}
-function bookmark(id){
-  var posts=SS.posts, p=posts.find(function(p){return p.id===id;});
-  if(p){p.bookmarked=!p.bookmarked;SS.posts=posts;renderPosts();}
-}
+function vote(id,dir){var posts=SS.posts,p=posts.find(function(p){return p.id===id;});if(!p)return;if(p.voted===dir){p.votes-=dir;p.voted=0;}else{p.votes+=dir-p.voted;p.voted=dir;}SS.posts=posts;renderPosts();}
+function bmark(id){var posts=SS.posts,p=posts.find(function(p){return p.id===id;});if(p){p.bookmarked=!p.bookmarked;SS.posts=posts;renderPosts();}}
+
+/* POST VIEW */
 function openPost(id){
   var p=SS.posts.find(function(p){return p.id===id;});
-  if(!p)return;
-  var cmt=Array.isArray(p.comments)?p.comments:[];
-  document.getElementById('view-content').innerHTML =
-    '<div class="modal-header"><div style="display:flex;gap:8px;align-items:center"><span class="badge badge-'+catColor(p.cat)+'">'+(p.examType||'')+'</span><span style="font-size:13px;color:var(--text2)">'+p.cat+'</span></div><button class="btn-icon" onclick="closeViewPost()">&#x2715;</button></div>'
-    +'<h2 style="font-family:var(--display);font-size:20px;font-weight:600;margin-bottom:8px;line-height:1.3">'+p.title+'</h2>'
-    +'<div style="font-size:13px;color:var(--text3);margin-bottom:16px">By '+p.author+' &middot; '+p.time+' &middot; &#x25B2; '+p.votes+'</div>'
-    +'<div style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px;white-space:pre-wrap">'+p.content+'</div>'
-    +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">'+(p.tags||[]).map(function(t){return '<span class="badge badge-gray">'+t+'</span>';}).join('')+'</div>'
-    +'<hr class="divider"/>'
-    +'<div style="font-size:13px;font-weight:600;margin-bottom:12px">Comments ('+cmt.length+')</div>'
-    +cmt.map(function(c){return '<div style="display:flex;gap:10px;margin-bottom:12px"><div class="avatar" style="width:26px;height:26px;font-size:10px;flex-shrink:0">'+(c.author||'?').slice(0,2).toUpperCase()+'</div><div><div style="font-size:12px;font-weight:500">'+c.author+' <span style="color:var(--text3);font-weight:400">'+(c.time||'')+'</span></div><div style="font-size:13px;color:var(--text2);margin-top:2px">'+c.text+'</div></div></div>';}).join('')
-    +'<div style="display:flex;gap:8px;margin-top:12px"><input class="form-input" id="cmt-inp-'+p.id+'" placeholder="Add a comment..." style="flex:1"/><button class="btn btn-primary btn-sm" onclick="addComment('+p.id+')">Post</button></div>';
-  document.getElementById('view-modal').style.display='flex';
+  if(!p) return;
+  currentPid=id;
+  document.getElementById('pv-meta').innerHTML='<span class="badge badge-'+catColor(p.cat)+'">'+(p.examType||'')+'</span><span style="font-size:13px;color:var(--text2)">'+p.cat+'</span>'+(p.isPracticeTest?'<span class="badge badge-orange">Practice Test</span>':'');
+  document.getElementById('pv-title').textContent=p.title;
+  document.getElementById('pv-byline').innerHTML='<div class="avatar" style="width:24px;height:24px;font-size:9px">'+p.author.slice(0,2).toUpperCase()+'</div><span style="font-size:13px;font-weight:500">'+p.author+'</span><span style="font-size:12px;color:var(--text3)">'+p.time+'</span>'+(p.tags||[]).map(function(t){return '<span class="badge badge-gray">'+t+'</span>';}).join('');
+  document.getElementById('pv-votes').textContent=p.votes;
+  document.getElementById('pv-up').className='vote-btn '+(p.voted===1?'active-up':'');
+  document.getElementById('pv-dn').className='vote-btn '+(p.voted===-1?'active-dn':'');
+  document.getElementById('pv-bm').textContent=p.bookmarked?'Saved':'Save';
+  // Show edit only for author or admin
+  document.getElementById('pv-edit-btn').style.display=(Auth.isAdmin||p.authorId===Auth.current.id)?'inline-flex':'none';
+  document.getElementById('pv-content').innerHTML=p.content||'<p style="color:var(--text3)">No content.</p>';
+  buildTOC();
+  document.getElementById('pv-info').innerHTML='<div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Post Info</div><div style="font-size:12px;color:var(--text2);line-height:1.9">Author: <strong>'+p.author+'</strong><br>Exam type: <strong>'+(p.examType||'—')+'</strong><br>Votes: <strong>'+p.votes+'</strong><br>Comments: <strong>'+(Array.isArray(p.comments)?p.comments.length:0)+'</strong></div>';
+  var related=SS.posts.filter(function(x){return x.id!==id&&x.examType===p.examType;}).slice(0,3);
+  document.getElementById('pv-related').innerHTML=related.map(function(r){return '<div onclick="openPost('+r.id+')" style="padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--text2)" onmouseover="this.style.color=\'var(--accent)\'" onmouseout="this.style.color=\'var(--text2)\'">'+r.title+'</div>';}).join('')||'<div style="font-size:12px;color:var(--text3)">No related posts yet.</div>';
+  renderCmts(p);
+  showView('post');
 }
-function addComment(postId){
-  var inp=document.getElementById('cmt-inp-'+postId);
-  if(!inp||!inp.value.trim()) return;
-  var posts=SS.posts, p=posts.find(function(p){return p.id===postId;});
-  if(p){if(!Array.isArray(p.comments))p.comments=[];p.comments.push({author:Auth.current.name,text:inp.value.trim(),time:'just now'});SS.posts=posts;Auth.addXP(5);}
-  closeViewPost(); renderPosts();
-}
-function closeViewPost(){ document.getElementById('view-modal').style.display='none'; }
-function openNewPost()  { document.getElementById('new-post-modal').style.display='flex'; }
-function closeNewPost() { document.getElementById('new-post-modal').style.display='none'; }
 
-function submitPost(){
-  var title=document.getElementById('np-title').value.trim();
-  var content=document.getElementById('np-content').value.trim();
-  var et=document.getElementById('np-examtype').value;
-  var cat=document.getElementById('np-cat').value.trim()||et;
-  var tags=document.getElementById('np-tags').value.split(',').map(function(t){return t.trim();}).filter(Boolean);
-  if(!title||!content){alert('Please fill in title and content.');return;}
-  var posts=SS.posts;
-  posts.unshift({id:Date.now(),title,content,author:Auth.current.name,authorId:Auth.current.id,cat,examType:et,tags,votes:1,comments:[],time:'Just now',bookmarked:false,voted:1});
-  SS.posts=posts; Auth.addXP(50); closeNewPost(); renderPosts();
+function buildTOC(){
+  var content=document.getElementById('pv-content');
+  var hs=content.querySelectorAll('h1,h2,h3');
+  var toc=document.getElementById('pv-toc');
+  var links=document.getElementById('toc-links');
+  if(hs.length<2){toc.style.display='none';return;}
+  toc.style.display='block'; links.innerHTML='';
+  hs.forEach(function(h,i){
+    h.id='s'+i;
+    var a=document.createElement('a');
+    a.href='#s'+i; a.textContent=h.textContent; a.className=h.tagName==='H3'?'h3':'';
+    a.onclick=function(e){e.preventDefault();h.scrollIntoView({behavior:'smooth'});};
+    links.appendChild(a);
+  });
 }
+
+function renderCmts(p){
+  var cmts=Array.isArray(p.comments)?p.comments:[];
+  document.getElementById('pv-cmt-count').textContent='Discussion ('+cmts.length+')';
+  document.getElementById('pv-cmts').innerHTML=cmts.length ? cmts.map(function(c,i){
+    var replies=Array.isArray(c.replies)?c.replies:[];
+    return '<div class="cmt-item">'
+      +'<div class="avatar" style="width:30px;height:30px;font-size:11px;flex-shrink:0">'+c.author.slice(0,2).toUpperCase()+'</div>'
+      +'<div class="cmt-body">'
+      +'<div style="display:flex;gap:10px;align-items:center;margin-bottom:5px"><span style="font-size:13px;font-weight:600">'+c.author+'</span><span style="font-size:12px;color:var(--text3)">'+(c.time||'')+'</span></div>'
+      +'<div style="font-size:14px;color:var(--text);line-height:1.65">'+c.text+'</div>'
+      +'<span style="font-size:12px;color:var(--accent);cursor:pointer;margin-top:6px;display:inline-block" onclick="toggleReply('+i+')">Reply</span>'
+      +(replies.length?'<div class="reply-thread">'+replies.map(function(r){return '<div class="reply-item"><div style="display:flex;gap:8px;align-items:flex-start"><div class="avatar" style="width:22px;height:22px;font-size:9px;flex-shrink:0">'+r.author.slice(0,2).toUpperCase()+'</div><div><div style="font-size:12px;font-weight:600;margin-bottom:3px">'+r.author+' <span style="font-weight:400;color:var(--text3)">'+(r.time||'')+'</span></div><div style="font-size:13px;color:var(--text);line-height:1.6">'+r.text+'</div></div></div></div>';}).join('')+'</div>':'')
+      +'<div id="rf-'+i+'" style="display:none;margin-top:8px"><div style="display:flex;gap:8px"><input class="form-input" id="ri-'+i+'" placeholder="Reply..." style="flex:1;padding:7px 10px;font-size:13px"/><button class="btn btn-primary btn-sm" onclick="submitReply('+i+')">Reply</button></div></div>'
+      +'</div></div>';
+  }).join('') : '<div style="padding:20px 0;color:var(--text3);font-size:13px">No comments yet — be the first.</div>';
+}
+
+function toggleReply(i){var f=document.getElementById('rf-'+i);if(f)f.style.display=f.style.display==='none'?'block':'none';}
+function submitReply(i){
+  var inp=document.getElementById('ri-'+i);
+  if(!inp||!inp.value.trim()) return;
+  var posts=SS.posts,p=posts.find(function(p){return p.id===currentPid;});
+  if(!p) return;
+  if(!Array.isArray(p.comments[i].replies))p.comments[i].replies=[];
+  p.comments[i].replies.push({author:Auth.current.name,text:inp.value.trim(),time:'just now'});
+  SS.posts=posts; Auth.addXP(3); inp.value=''; renderCmts(p);
+}
+function submitCmt(){
+  var inp=document.getElementById('pv-cmt-inp');
+  if(!inp||!inp.value.trim()) return;
+  var posts=SS.posts,p=posts.find(function(p){return p.id===currentPid;});
+  if(!p) return;
+  if(!Array.isArray(p.comments))p.comments=[];
+  p.comments.push({author:Auth.current.name,text:inp.value.trim(),time:'just now',replies:[]});
+  SS.posts=posts; Auth.addXP(5); inp.value=''; renderCmts(p);
+}
+function pvVote(dir){
+  var posts=SS.posts,p=posts.find(function(p){return p.id===currentPid;});
+  if(!p) return;
+  if(p.voted===dir){p.votes-=dir;p.voted=0;}else{p.votes+=dir-p.voted;p.voted=dir;}
+  SS.posts=posts;
+  document.getElementById('pv-votes').textContent=p.votes;
+  document.getElementById('pv-up').className='vote-btn '+(p.voted===1?'active-up':'');
+  document.getElementById('pv-dn').className='vote-btn '+(p.voted===-1?'active-dn':'');
+}
+function pvBookmark(){
+  var posts=SS.posts,p=posts.find(function(p){return p.id===currentPid;});
+  if(p){p.bookmarked=!p.bookmarked;SS.posts=posts;document.getElementById('pv-bm').textContent=p.bookmarked?'Saved':'Save';}
+}
+function editCurrentPost(){openEditor(currentPid);}
+function closePost(){showView('hub');renderPosts();}
+
+/* EDITOR */
+function openEditor(editId){
+  currentPid=editId||null;
+  var ec=document.getElementById('ec'),title=document.getElementById('ed-title');
+  if(editId){
+    var p=SS.posts.find(function(p){return p.id===editId;});
+    if(p){title.value=p.title;ec.innerHTML=p.content||'';document.getElementById('ed-examtype').value=p.examType||'AP';document.getElementById('ed-cat').value=p.cat||'';document.getElementById('ed-tags').value=(p.tags||[]).join(', ');}
+  } else {
+    title.value='';ec.innerHTML=draft;document.getElementById('ed-examtype').value='AP';document.getElementById('ed-cat').value='';document.getElementById('ed-tags').value='';
+  }
+  updateWC();
+  showView('editor');
+  setTimeout(function(){ec.focus();},80);
+}
+function closeEditor(){draft=document.getElementById('ec').innerHTML;showView('hub');}
+function saveDraft(){
+  draft=document.getElementById('ec').innerHTML;
+  var n=document.createElement('div');
+  n.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--text);color:#fff;padding:8px 16px;border-radius:6px;font-size:13px;z-index:999;transition:opacity .4s';
+  n.textContent='Draft saved';
+  document.body.appendChild(n);
+  setTimeout(function(){n.style.opacity='0';setTimeout(function(){n.remove();},400);},1600);
+}
+function publishPost(){
+  var title=document.getElementById('ed-title').value.trim();
+  var content=document.getElementById('ec').innerHTML.trim();
+  var et=document.getElementById('ed-examtype').value;
+  var cat=document.getElementById('ed-cat').value.trim()||et;
+  var tags=document.getElementById('ed-tags').value.split(',').map(function(t){return t.trim();}).filter(Boolean);
+  var tmp=document.createElement('div');tmp.innerHTML=content;
+  if(!title||!tmp.textContent.trim()){alert('Please add a title and content.');return;}
+  var posts=SS.posts;
+  if(currentPid){
+    posts=posts.map(function(p){return p.id===currentPid?Object.assign({},p,{title,content,cat,examType:et,tags}):p;});
+    SS.posts=posts; Auth.addXP(10);
+    openPost(currentPid);
+  } else {
+    var nid=Date.now();
+    posts.unshift({id:nid,title,content,author:Auth.current.name,authorId:Auth.current.id,cat,examType:et,tags,votes:1,comments:[],time:'Just now',bookmarked:false,voted:1});
+    SS.posts=posts; Auth.addXP(75); draft='';
+    openPost(nid);
+  }
+}
+
+/* FORMATTING */
+function fmt(cmd,val){document.getElementById('ec').focus();document.execCommand(cmd,false,val||null);}
+function doMark(){var sel=window.getSelection();if(!sel.rangeCount)return;var r=sel.getRangeAt(0),m=document.createElement('mark');try{r.surroundContents(m);}catch(e){}}
+function doBlockquote(){fmt('formatBlock','BLOCKQUOTE');}
+function doCode(){var sel=window.getSelection();if(sel.toString()){var c=document.createElement('code'),r=sel.getRangeAt(0);try{r.surroundContents(c);}catch(e){}}else{document.execCommand('insertHTML',false,'<code>code</code>');}}
+function doHR(){document.execCommand('insertHTML',false,'<hr/><p><br></p>');}
+function doTable(){document.execCommand('insertHTML',false,'<table><thead><tr><th>Column 1</th><th>Column 2</th><th>Column 3</th></tr></thead><tbody><tr><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td></tr></tbody></table><p><br></p>');}
+function doCallout(type){var labels={tip:'Tip',warn:'Note',info:'Info'};document.execCommand('insertHTML',false,'<div class="callout callout-'+type+'"><div class="callout-label">'+labels[type]+'</div><p>Type your note here...</p></div><p><br></p>');}
+function doLink(){var url=prompt('Enter URL:');if(url)document.execCommand('createLink',false,url);}
+
+document.getElementById('ec').addEventListener('input',updateWC);
+function updateWC(){var tmp=document.createElement('div');tmp.innerHTML=document.getElementById('ec').innerHTML;var w=(tmp.textContent||'').trim().split(/\s+/).filter(function(x){return x.length>0;}).length;document.getElementById('wc').textContent=w.toLocaleString()+' word'+(w!==1?'s':'');}
 
 // Top contributors
-var users = Auth.getUsers().sort(function(a,b){return (b.xp||0)-(a.xp||0);}).slice(0,4);
-document.getElementById('top-contributors').innerHTML = users.map(function(u,i){
-  return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);' + (i===users.length-1?'border-bottom:none':'') + '">'
-    +'<div class="avatar" style="width:26px;height:26px;font-size:10px">'+(u.initials||'?')+'</div>'
+var users=Auth.getUsers().sort(function(a,b){return (b.xp||0)-(a.xp||0);}).slice(0,4);
+document.getElementById('top-contributors').innerHTML=users.map(function(u,i){
+  return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;'+(i<users.length-1?'border-bottom:1px solid var(--border)':'')+'">'
+    +'<div class="avatar" style="width:24px;height:24px;font-size:9px">'+(u.initials||'?')+'</div>'
     +'<div style="flex:1;font-size:13px">'+u.name+'</div>'
     +'<div style="font-size:11px;color:var(--text3)">'+(u.xp||0).toLocaleString()+' XP</div></div>';
 }).join('');
 
+showView('hub');
 renderPosts();
 </script>
 </body>
