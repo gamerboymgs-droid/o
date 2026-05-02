@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Acadence AI — Home</title>
+<title>Acadence — Dashboard</title>
 <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -11,98 +11,153 @@
 <div class="main">
   <div class="page-header">
     <div>
-      <div class="page-title" id="welcome-title">Welcome back!</div>
-      <div class="page-sub" id="streak-sub">Loading...</div>
+      <div class="page-title" id="welcome-title">Dashboard</div>
+      <div class="page-sub" id="streak-sub">Your AP &amp; SAT/ACT prep at a glance</div>
     </div>
-    <a href="study.html" class="btn btn-primary">My Study Plan</a>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <a href="exams.html" class="btn btn-ghost btn-sm">Browse Exams</a>
+      <a href="study.html" class="btn btn-primary btn-sm">My Study Plan</a>
+    </div>
   </div>
   <div class="page-content">
-    <div class="grid-4" style="margin-bottom:20px">
-      <div class="stat-card"><div class="stat-label">Study Streak</div><div class="stat-val" id="stat-streak">0</div><div class="stat-sub">Days in a row</div></div>
-      <div class="stat-card"><div class="stat-label">Today's Progress</div><div class="stat-val" id="stat-today">0m</div><div class="stat-sub" id="stat-tasks">0/5 tasks done</div><div class="prog-bar" style="margin-top:8px"><div class="prog-fill" id="task-bar" style="width:0%;background:var(--accent)"></div></div></div>
-      <div class="stat-card"><div class="stat-label">Total XP</div><div class="stat-val" id="stat-xp">0</div><div class="trend-up">+2 XP per note typed</div></div>
-      <div class="stat-card"><div class="stat-label">Bookmarked Posts</div><div class="stat-val" id="stat-bookmarks">0</div><div class="stat-sub">Saved for review</div></div>
+
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="stat-card"><div class="stat-label">Study Streak</div><div class="stat-val" id="stat-streak">4</div><div class="stat-sub">days in a row</div></div>
+      <div class="stat-card"><div class="stat-label">Today's Study</div><div class="stat-val" id="stat-today">20m</div><div class="stat-sub" id="stat-tasks">1 of 5 tasks done</div><div class="prog-bar" style="margin-top:10px"><div class="prog-fill" id="task-bar" style="width:20%;background:var(--accent)"></div></div></div>
+      <div class="stat-card"><div class="stat-label">Total XP</div><div class="stat-val" id="stat-xp">0</div><div class="trend-up" id="xp-level">Level 1</div></div>
+      <div class="stat-card"><div class="stat-label">Bookmarked</div><div class="stat-val" id="stat-bookmarks">0</div><div class="stat-sub">posts saved</div></div>
     </div>
 
-    <div class="grid-2">
-      <div>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div style="font-family:var(--display);font-weight:600;font-size:15px">Trending Posts</div>
-          <a href="community.html" class="btn btn-ghost btn-sm">View all</a>
-        </div>
-        <div id="trending-posts" style="display:flex;flex-direction:column;gap:10px"></div>
+    <!-- Exam type quick links -->
+    <div style="margin-bottom:24px">
+      <div style="font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:12px">Jump to Exam Type</div>
+      <div class="grid-3">
+        <a href="exams.html?type=AP" class="exam-strip ap-style" style="background:var(--amberlt)">
+          <div>
+            <div style="font-family:var(--display);font-size:18px;font-weight:600;color:var(--amber)">AP Exams</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px">38 subjects · May testing window</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:6px">Score 3+ for college credit. FRQ strategies, content guides, past exams.</div>
+          </div>
+        </a>
+        <a href="exams.html?type=SAT" class="exam-strip sat-style" style="background:var(--bluelt)">
+          <div>
+            <div style="font-family:var(--display);font-size:18px;font-weight:600;color:var(--blue)">SAT</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px">1600 points · 7 test dates/year</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:6px">Reading, Writing, Math. Digital format since 2024. Adaptive sections.</div>
+          </div>
+        </a>
+        <a href="exams.html?type=ACT" class="exam-strip act-style" style="background:var(--greenlt)">
+          <div>
+            <div style="font-family:var(--display);font-size:18px;font-weight:600;color:var(--green)">ACT</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:4px">36 points composite · 7 test dates/year</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:6px">English, Math, Reading, Science. Optional Writing section.</div>
+          </div>
+        </a>
       </div>
-      <div>
-        <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">Quick Actions</div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <a href="quiz.html" class="card-sm" style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:8px;background:rgba(108,99,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px">&#x1F9E0;</div><div><div style="font-size:13.5px;font-weight:500">Practice Quiz</div><div style="font-size:12px;color:var(--text3)">Test your knowledge</div></div></a>
-          <a href="flashcards.html" class="card-sm" style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:8px;background:rgba(56,189,248,.15);display:flex;align-items:center;justify-content:center;font-size:18px">&#x1F0CF;</div><div><div style="font-size:13.5px;font-weight:500">Flashcards</div><div style="font-size:12px;color:var(--text3)">5 cards ready</div></div></a>
-          <a href="ai.html" class="card-sm" style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:8px;background:rgba(16,185,129,.15);display:flex;align-items:center;justify-content:center;font-size:18px">&#x1F916;</div><div><div style="font-size:13.5px;font-weight:500">Ask Cadence</div><div style="font-size:12px;color:var(--text3)">Your AI study companion</div></div></a>
-          <a href="community.html" class="card-sm" style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:8px;background:rgba(245,158,11,.15);display:flex;align-items:center;justify-content:center;font-size:18px">&#x270D;</div><div><div style="font-size:13.5px;font-weight:500">Create a Post</div><div style="font-size:12px;color:var(--text3)">Share knowledge</div></div></a>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
+      <!-- Left: tasks + trending -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-size:13px;font-weight:600;color:var(--text)">Today's Tasks</div>
+            <a href="study.html" style="font-size:12px;color:var(--accent)">View full plan</a>
+          </div>
+          <div class="card" style="padding:0" id="task-list"></div>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div style="font-size:13px;font-weight:600">Top Posts This Week</div>
+            <a href="community.html" style="font-size:12px;color:var(--accent)">View all</a>
+          </div>
+          <div id="trending-posts" style="display:flex;flex-direction:column;gap:8px"></div>
         </div>
       </div>
-    </div>
 
-    <div style="margin-top:20px">
-      <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:12px">Today's Tasks</div>
-      <div class="card" id="task-list"></div>
-    </div>
+      <!-- Right: quick tools + note -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:10px">Study Tools</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <a href="quiz.html" class="card-sm" style="display:flex;align-items:center;gap:12px;padding:12px 14px">
+              <div style="width:32px;height:32px;border-radius:6px;background:var(--accentlt);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" fill="none" stroke="var(--accent)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-linecap="round" stroke-width="3"/></svg></div>
+              <div><div style="font-size:13px;font-weight:500">Practice Quiz</div><div style="font-size:11px;color:var(--text3)">AP &amp; SAT/ACT questions</div></div>
+            </a>
+            <a href="flashcards.html" class="card-sm" style="display:flex;align-items:center;gap:12px;padding:12px 14px">
+              <div style="width:32px;height:32px;border-radius:6px;background:var(--bluelt);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+              <div><div style="font-size:13px;font-weight:500">Flashcards</div><div style="font-size:11px;color:var(--text3)">Key terms &amp; concepts</div></div>
+            </a>
+            <a href="ai.html" class="card-sm" style="display:flex;align-items:center;gap:12px;padding:12px 14px">
+              <div style="width:32px;height:32px;border-radius:6px;background:var(--greenlt);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" fill="none" stroke="var(--green)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2z"/></svg></div>
+              <div><div style="font-size:13px;font-weight:500">Ask Cadence</div><div style="font-size:11px;color:var(--text3)">AP &amp; SAT/ACT AI tutor</div></div>
+            </a>
+            <a href="community.html" class="card-sm" style="display:flex;align-items:center;gap:12px;padding:12px 14px">
+              <div style="width:32px;height:32px;border-radius:6px;background:var(--purplelt);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" fill="none" stroke="var(--purple)" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+              <div><div style="font-size:13px;font-weight:500">Post in Hub</div><div style="font-size:11px;color:var(--text3)">Share notes &amp; strategies</div></div>
+            </a>
+          </div>
+        </div>
 
-    <div style="margin-top:20px">
-      <div style="font-family:var(--display);font-weight:600;font-size:15px;margin-bottom:8px">Quick Note <span style="font-size:11px;font-weight:400;color:var(--accent2)">+2 XP per note</span></div>
-      <div class="card"><textarea class="form-input" id="quick-note" placeholder="Jot anything down — key terms, reminders, questions..." style="min-height:80px;border:none;background:transparent;padding:0;font-size:14px;width:100%"></textarea></div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:8px">Quick Note <span style="font-size:11px;font-weight:400;color:var(--accent)">+2 XP</span></div>
+          <div class="card" style="padding:12px 14px">
+            <textarea id="quick-note" placeholder="Jot down key terms, reminders, or questions..." style="width:100%;min-height:90px;border:none;background:transparent;font-size:13px;line-height:1.6;color:var(--text);resize:none;font-family:var(--font)"></textarea>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
 <script src="app.js"></script>
 <script>
-if (!requireAuth()) { throw 0; }
+if (!requireAuth()) throw 0;
 document.getElementById('sidebar-mount').innerHTML = buildSidebar('home');
 var user = Auth.current;
-document.getElementById('welcome-title').textContent = 'Welcome back, ' + user.name.split(' ')[0] + '!';
-document.getElementById('streak-sub').textContent    = 'You are on a ' + SS.streak + '-day streak. Keep it up!';
-document.getElementById('stat-streak').textContent   = SS.streak + ' days';
+document.getElementById('welcome-title').textContent = 'Welcome back, ' + user.name.split(' ')[0];
+document.getElementById('streak-sub').textContent    = SS.streak + '-day study streak — keep it going';
+document.getElementById('stat-streak').textContent   = SS.streak;
 document.getElementById('stat-today').textContent    = SS.todayMins + 'm';
 document.getElementById('stat-xp').textContent       = (user.xp||0).toLocaleString();
-document.getElementById('stat-bookmarks').textContent = SS.posts.filter(function(p){return p.bookmarked;}).length;
+document.getElementById('xp-level').textContent      = 'Level ' + xpLevel();
+document.getElementById('stat-bookmarks').textContent= SS.posts.filter(function(p){return p.bookmarked;}).length;
 
 trackTypingXP(document.getElementById('quick-note'), 2);
 
-var defaultTasks = [
-  {label:'Review Krebs Cycle notes', done:true, mins:20},
-  {label:'Complete 10 Biology practice questions', done:false, mins:25},
-  {label:'Read Ch. 8: Molecular Genetics', done:false, mins:30},
-  {label:'Flashcard review - 20 cards', done:false, mins:15},
-  {label:'Watch video: DNA Replication', done:false, mins:20},
+var tasks = [
+  {label:'Review AP Bio: Cellular Respiration notes',     done:true,  mins:20},
+  {label:'Complete 10 SAT Math practice questions',       done:false, mins:25},
+  {label:'Read AP US History Period 4 summary',           done:false, mins:30},
+  {label:'Flashcard drill — 20 vocabulary cards',        done:false, mins:15},
+  {label:'Watch AP Calc: Integration by Parts video',    done:false, mins:20},
 ];
 
 function renderTasks() {
-  var done = defaultTasks.filter(function(t){return t.done;}).length;
-  document.getElementById('stat-tasks').textContent = done + '/' + defaultTasks.length + ' tasks done';
-  document.getElementById('task-bar').style.width = Math.round(done/defaultTasks.length*100) + '%';
-  document.getElementById('task-list').innerHTML = defaultTasks.map(function(t,i){
-    var last = i===defaultTasks.length-1;
-    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;' + (last?'':'border-bottom:1px solid var(--border)') + '">'
-      + '<div onclick="toggleTask(' + i + ')" style="width:20px;height:20px;border-radius:5px;border:1.5px solid ' + (t.done?'var(--success)':'var(--border2)') + ';background:' + (t.done?'var(--success)':'transparent') + ';display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:12px;flex-shrink:0">' + (t.done?'&#10003;':'') + '</div>'
-      + '<div style="flex:1;font-size:13.5px;color:' + (t.done?'var(--text3)':'var(--text)') + ';text-decoration:' + (t.done?'line-through':'none') + '">' + t.label + '</div>'
-      + '<div style="font-size:12px;color:var(--text3)">' + t.mins + 'm</div></div>';
+  var done = tasks.filter(function(t){return t.done;}).length;
+  document.getElementById('stat-tasks').textContent = done + ' of ' + tasks.length + ' tasks done';
+  document.getElementById('task-bar').style.width = Math.round(done/tasks.length*100) + '%';
+  document.getElementById('task-list').innerHTML = tasks.map(function(t,i){
+    var last = i===tasks.length-1;
+    return '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;' + (last?'':'border-bottom:1px solid var(--border)') + '">'
+      + '<div onclick="toggleTask(' + i + ')" style="width:18px;height:18px;border-radius:4px;border:1.5px solid ' + (t.done?'var(--success)':'var(--border2)') + ';background:' + (t.done?'var(--success)':'transparent') + ';display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:10px;flex-shrink:0">' + (t.done?'&#10003;':'') + '</div>'
+      + '<div style="flex:1;font-size:13px;color:' + (t.done?'var(--text3)':'var(--text)') + ';text-decoration:' + (t.done?'line-through':'none') + '">' + t.label + '</div>'
+      + '<div style="font-size:11px;color:var(--text3);flex-shrink:0">' + t.mins + 'm</div></div>';
   }).join('');
 }
-function toggleTask(i) {
-  defaultTasks[i].done = !defaultTasks[i].done;
-  if (defaultTasks[i].done) Auth.addXP(10);
-  renderTasks(); SS.save();
-}
 
-var top = SS.posts.slice().sort(function(a,b){return b.votes-a.votes;}).slice(0,3);
+function toggleTask(i) { tasks[i].done = !tasks[i].done; if(tasks[i].done) Auth.addXP(10); renderTasks(); SS.save(); }
+
+var top = SS.posts.slice().sort(function(a,b){return b.votes-a.votes;}).slice(0,4);
 document.getElementById('trending-posts').innerHTML = top.map(function(p){
-  var cmt = Array.isArray(p.comments) ? p.comments.length : (p.comments||0);
-  return '<a href="community.html" class="card-sm" style="display:block">'
-    + '<div style="display:flex;gap:10px;align-items:flex-start">'
-    + '<span class="badge badge-' + catColor(p.cat) + '">' + p.cat + '</span>'
-    + '<div style="flex:1;min-width:0"><div style="font-size:13.5px;font-weight:500;line-height:1.4;margin-bottom:3px">' + p.title + '</div>'
-    + '<div style="font-size:12px;color:var(--text3)">&#x25B2; ' + p.votes + ' &middot; ' + p.time + ' &middot; ' + cmt + ' comments</div>'
-    + '</div></div></a>';
+  var cmt = Array.isArray(p.comments)?p.comments.length:(p.comments||0);
+  return '<a href="community.html" class="post-card" style="text-decoration:none">'
+    + '<div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:0">'
+    + '<div style="display:flex;gap:6px;align-items:center"><span class="badge badge-' + catColor(p.cat) + '">' + (p.examType||'') + '</span><span style="font-size:11px;color:var(--text3)">' + p.cat + '</span>' + (p.isPracticeTest?'<span class="badge badge-orange" style="margin-left:auto">Practice Test</span>':'') + '</div>'
+    + '<div style="font-size:14px;font-weight:600;font-family:var(--display);line-height:1.3;color:var(--text)">' + p.title + '</div>'
+    + '<div style="display:flex;gap:12px"><span class="post-stat">&#x25B2; ' + p.votes + '</span><span class="post-stat">' + cmt + ' comments</span><span class="post-stat">' + p.time + '</span></div>'
+    + '</div></a>';
 }).join('');
 
 renderTasks();

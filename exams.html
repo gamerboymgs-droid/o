@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acadence — Exam Library</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div id="sidebar-mount"></div>
+<div class="main">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Exam Library</div>
+      <div class="page-sub">AP exams, SAT, ACT — practice tests, guides, and strategies</div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="openUploadModal()">Upload Practice Test</button>
+  </div>
+  <div class="page-content">
+
+    <!-- Exam type tabs -->
+    <div style="display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap" id="type-filters">
+      <button class="subject-pill active" onclick="setType('All')">All Exams</button>
+      <button class="subject-pill" onclick="setType('AP')" style="border-color:#d97706;color:#92400e">AP Exams</button>
+      <button class="subject-pill" onclick="setType('SAT')" style="border-color:#1d4ed8;color:#1e40af">SAT</button>
+      <button class="subject-pill" onclick="setType('ACT')" style="border-color:#15803d;color:#14532d">ACT</button>
+    </div>
+
+    <!-- AP Exam info panel -->
+    <div id="info-ap" class="grid-3" style="margin-bottom:24px">
+      <div class="info-panel ap">
+        <div class="info-panel-title">AP Exam Format</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6">Multiple Choice + Free Response. Scored 1-5. Score of 3+ typically earns college credit. Exam window: early May.</div>
+      </div>
+      <div class="info-panel ap">
+        <div class="info-panel-title">FRQ Scoring</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6">Each FRQ scored by rubric. Show all work. Use correct terminology. Partial credit is common — never leave blank.</div>
+      </div>
+      <div class="info-panel ap">
+        <div class="info-panel-title">Score Distribution</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.6">National average pass rate ~60%. STEM APs tend to have lower pass rates. Check College Board for subject-specific data.</div>
+      </div>
+    </div>
+
+    <div id="info-sat" style="display:none;margin-bottom:24px">
+      <div class="grid-3">
+        <div class="info-panel sat">
+          <div class="info-panel-title">SAT Structure (2024+)</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">Digital adaptive test. 2 hours 14 minutes. Reading &amp; Writing (54Q) + Math (44Q). Score range: 400-1600.</div>
+        </div>
+        <div class="info-panel sat">
+          <div class="info-panel-title">Score Percentiles</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">1200 = ~74th percentile. 1400 = ~94th percentile. 1500 = ~98th percentile. 1600 = 99.9th percentile.</div>
+        </div>
+        <div class="info-panel sat">
+          <div class="info-panel-title">Key Dates</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">7 test dates per year. Register at collegeboard.org. Register 4-6 weeks before your test date. Fee waivers available.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="info-act" style="display:none;margin-bottom:24px">
+      <div class="grid-3">
+        <div class="info-panel act">
+          <div class="info-panel-title">ACT Structure</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">English (75Q/45min), Math (60Q/60min), Reading (40Q/35min), Science (40Q/35min). Optional Writing. Composite: 1-36.</div>
+        </div>
+        <div class="info-panel act">
+          <div class="info-panel-title">Score Targets</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">Composite 24+ = ~75th percentile. 30+ = ~95th. Top universities average 33-35. Science section is data interpretation, not content.</div>
+        </div>
+        <div class="info-panel act">
+          <div class="info-panel-title">ACT vs SAT</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">ACT has a Science section. SAT is now shorter (digital). Both accepted equally. Take a practice test for each to see which suits you.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subject filter for AP -->
+    <div id="ap-subjects" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px">
+      <div style="font-size:12px;font-weight:600;color:var(--text3);align-self:center;margin-right:4px">Subject:</div>
+    </div>
+
+    <!-- Score guide -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:600" id="results-label">All Practice Tests &amp; Guides</div>
+      <div style="display:flex;gap:8px">
+        <span style="font-size:12px;color:var(--text3)">Sort:</span>
+        <select class="form-input" style="width:auto;padding:4px 10px;font-size:12px" id="sort-sel" onchange="renderExams()">
+          <option value="votes">Most Voted</option>
+          <option value="new">Newest</option>
+          <option value="tests">Practice Tests First</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="exam-list" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+</div>
+
+<!-- Upload / Post Modal -->
+<div id="upload-modal" style="display:none" class="overlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">Upload Practice Exam or Guide</div>
+      <button class="btn-icon" onclick="closeModal()">&#x2715;</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Post Type</label>
+      <div style="display:flex;gap:8px">
+        <button id="type-btn-guide" class="btn btn-ghost btn-sm active-type" onclick="setPostType('guide')" style="border-color:var(--accent);color:var(--accent)">Guide / Notes</button>
+        <button id="type-btn-test" class="btn btn-ghost btn-sm" onclick="setPostType('test')">Full Practice Test</button>
+        <button id="type-btn-frq" class="btn btn-ghost btn-sm" onclick="setPostType('frq')">FRQ / Free Response</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Exam Type</label>
+      <select class="form-input" id="up-examtype" onchange="updateSubjectOptions()">
+        <option value="AP">AP Exam</option>
+        <option value="SAT">SAT</option>
+        <option value="ACT">ACT</option>
+      </select>
+    </div>
+    <div class="form-group" id="subject-group">
+      <label class="form-label">AP Subject</label>
+      <select class="form-input" id="up-subject">
+        <option>AP Biology</option><option>AP Chemistry</option><option>AP Physics 1</option>
+        <option>AP Physics C</option><option>AP Calculus AB</option><option>AP Calculus BC</option>
+        <option>AP Statistics</option><option>AP US History</option><option>AP World History</option>
+        <option>AP European History</option><option>AP US Government</option><option>AP Psychology</option>
+        <option>AP English Language</option><option>AP English Literature</option>
+        <option>AP Computer Science A</option><option>AP Economics (Macro)</option><option>AP Economics (Micro)</option>
+        <option>AP Spanish Language</option><option>AP Art History</option><option>AP Environmental Science</option>
+      </select>
+    </div>
+    <div class="form-group" id="year-group">
+      <label class="form-label">Exam Year (for practice tests)</label>
+      <select class="form-input" id="up-year">
+        <option>2024</option><option>2023</option><option>2022</option><option>2021</option>
+        <option>2020</option><option>2019</option><option>2018</option><option>Undated / Custom</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input class="form-input" id="up-title" placeholder="e.g. AP Biology 2023 Free Response — Full Solutions"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Content / Description</label>
+      <textarea class="form-input" id="up-content" style="min-height:120px" placeholder="Paste the exam content, solutions, scoring guide, or tips. The more detail, the more helpful."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Source</label>
+      <input class="form-input" id="up-source" placeholder="e.g. College Board, Princeton Review, Khan Academy, Original"/>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitExam()">Publish</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+if (!requireAuth()) throw 0;
+document.getElementById('sidebar-mount').innerHTML = buildSidebar('exams');
+
+var activeType = 'All';
+var postType = 'guide';
+
+// Read URL param
+var urlType = new URLSearchParams(window.location.search).get('type');
+if (urlType) { activeType = urlType; updateTypeUI(); }
+
+function setType(t) {
+  activeType = t;
+  updateTypeUI();
+  renderExams();
+}
+
+function updateTypeUI() {
+  document.querySelectorAll('#type-filters .subject-pill').forEach(function(b,i){
+    b.classList.toggle('active', ['All','AP','SAT','ACT'][i] === activeType);
+  });
+  document.getElementById('info-ap').style.display  = (activeType==='AP'||activeType==='All')  ? 'grid' : 'none';
+  document.getElementById('info-sat').style.display = (activeType==='SAT'||activeType==='All') ? 'block': 'none';
+  document.getElementById('info-act').style.display = (activeType==='ACT'||activeType==='All') ? 'block': 'none';
+  document.getElementById('ap-subjects').style.display = activeType==='AP' ? 'flex' : 'none';
+}
+
+function renderExams() {
+  var sort = document.getElementById('sort-sel').value;
+  var posts = SS.posts.slice();
+  if (activeType !== 'All') posts = posts.filter(function(p){ return p.examType === activeType; });
+  if (sort==='votes')  posts.sort(function(a,b){ return b.votes-a.votes; });
+  if (sort==='new')    posts.reverse();
+  if (sort==='tests')  posts.sort(function(a,b){ return (b.isPracticeTest?1:0)-(a.isPracticeTest?1:0); });
+
+  document.getElementById('results-label').textContent = posts.length + ' results' + (activeType!=='All'?' for '+activeType:'');
+
+  document.getElementById('exam-list').innerHTML = posts.length ? posts.map(function(p){
+    var cmt = Array.isArray(p.comments)?p.comments.length:(p.comments||0);
+    return '<div class="post-card" onclick="openPost(' + p.id + ')" style="gap:0;flex-direction:column">'
+      + '<div style="display:flex;gap:10px;align-items:flex-start">'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;flex-wrap:wrap">'
+      + '<span class="badge badge-' + catColor(p.cat) + '">' + (p.examType||'') + '</span>'
+      + '<span style="font-size:12px;color:var(--text2);font-weight:500">' + p.cat + '</span>'
+      + (p.isPracticeTest ? '<span class="badge badge-orange">Practice Test</span>' : '')
+      + (p.testYear ? '<span style="font-size:11px;color:var(--text3)">' + p.testYear + '</span>' : '')
+      + (p.testSource ? '<span style="font-size:11px;color:var(--text3)">· ' + p.testSource + '</span>' : '')
+      + '</div>'
+      + '<div class="post-title">' + p.title + '</div>'
+      + '<div class="post-excerpt" style="margin-top:6px">' + p.content + '</div>'
+      + '<div class="post-footer">'
+      + '<span class="post-stat">By ' + p.author + '</span>'
+      + '<span class="post-stat">&#x25B2; ' + p.votes + '</span>'
+      + '<span class="post-stat">' + cmt + ' comments</span>'
+      + '<span class="post-stat">' + p.time + '</span>'
+      + '<button class="btn btn-ghost btn-xs" style="margin-left:auto" onclick="event.stopPropagation();bookmarkPost(' + p.id + ')">' + (p.bookmarked?'Saved':'Save') + '</button>'
+      + '</div>'
+      + '</div></div></div>';
+  }).join('') : '<div style="text-align:center;padding:60px;color:var(--text3)">No exams found for this filter.</div>';
+}
+
+function bookmarkPost(id) {
+  var posts = SS.posts;
+  var p = posts.find(function(p){return p.id===id;});
+  if(p) { p.bookmarked=!p.bookmarked; SS.posts=posts; renderExams(); }
+}
+
+function openPost(id) {
+  var p = SS.posts.find(function(p){return p.id===id;});
+  if(!p) return;
+  document.getElementById('view-content').innerHTML = renderPostDetail(p);
+  document.getElementById('view-modal').style.display = 'flex';
+}
+
+function renderPostDetail(p) {
+  var cmt = Array.isArray(p.comments)?p.comments:[];
+  return '<div class="modal-header">'
+    + '<div style="display:flex;gap:8px;align-items:center">'
+    + '<span class="badge badge-' + catColor(p.cat) + '">' + (p.examType||'') + '</span>'
+    + '<span style="font-size:13px;color:var(--text2)">' + p.cat + '</span></div>'
+    + '<button class="btn-icon" onclick="document.getElementById(\'view-modal\').style.display=\'none\'">&#x2715;</button></div>'
+    + '<h2 style="font-family:var(--display);font-size:20px;font-weight:600;margin-bottom:10px;line-height:1.3">' + p.title + '</h2>'
+    + (p.testYear||p.testSource ? '<div style="display:flex;gap:10px;margin-bottom:12px">' + (p.testYear?'<span class="badge badge-gray">'+p.testYear+'</span>':'') + (p.testSource?'<span class="badge badge-gray">'+p.testSource+'</span>':'') + '</div>' : '')
+    + '<div style="font-size:13px;color:var(--text3);margin-bottom:16px">By ' + p.author + ' · ' + p.time + ' · &#x25B2; ' + p.votes + '</div>'
+    + '<div style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:18px;white-space:pre-wrap">' + p.content + '</div>'
+    + '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px">' + (p.tags||[]).map(function(t){return '<span class="badge badge-gray">'+t+'</span>';}).join('') + '</div>'
+    + '<hr class="divider"/>'
+    + '<div style="font-size:13px;font-weight:600;margin-bottom:14px">Comments (' + cmt.length + ')</div>'
+    + cmt.map(function(c){ return '<div style="display:flex;gap:10px;margin-bottom:12px"><div class="avatar" style="width:26px;height:26px;font-size:10px;flex-shrink:0">' + (c.author||'?').slice(0,2).toUpperCase() + '</div><div><div style="font-size:12px;font-weight:500">' + c.author + ' <span style="color:var(--text3);font-weight:400">' + (c.time||'just now') + '</span></div><div style="font-size:13px;color:var(--text2);margin-top:2px">' + c.text + '</div></div></div>'; }).join('')
+    + '<div style="display:flex;gap:8px;margin-top:12px"><input class="form-input" id="cmt-input-' + p.id + '" placeholder="Add a comment..." style="flex:1"/><button class="btn btn-primary btn-sm" onclick="addComment(' + p.id + ')">Post</button></div>';
+}
+
+function addComment(postId) {
+  var inp = document.getElementById('cmt-input-'+postId);
+  if(!inp||!inp.value.trim()) return;
+  var posts = SS.posts;
+  var p = posts.find(function(p){return p.id===postId;});
+  if(p) {
+    if(!Array.isArray(p.comments)) p.comments=[];
+    p.comments.push({author:Auth.current.name, text:inp.value.trim(), time:'just now'});
+    SS.posts = posts; Auth.addXP(5);
+    document.getElementById('view-modal').style.display='none';
+    renderExams();
+  }
+}
+
+// View modal (inline)
+var viewModal = document.createElement('div');
+viewModal.id = 'view-modal';
+viewModal.className = 'overlay';
+viewModal.style.display = 'none';
+viewModal.innerHTML = '<div class="modal" id="view-content" onclick="event.stopPropagation()"></div>';
+viewModal.onclick = function(){ this.style.display='none'; };
+document.body.appendChild(viewModal);
+
+function setPostType(t) {
+  postType = t;
+  ['guide','test','frq'].forEach(function(x){
+    var btn = document.getElementById('type-btn-'+x);
+    if(btn) { btn.style.borderColor = x===t?'var(--accent)':''; btn.style.color = x===t?'var(--accent)':''; }
+  });
+  document.getElementById('year-group').style.display = t==='guide'?'none':'block';
+}
+
+function updateSubjectOptions() {
+  var et = document.getElementById('up-examtype').value;
+  document.getElementById('subject-group').style.display = et==='AP' ? 'block' : 'none';
+}
+
+function openUploadModal() { document.getElementById('upload-modal').style.display='flex'; }
+function closeModal() { document.getElementById('upload-modal').style.display='none'; }
+
+function submitExam() {
+  var title   = document.getElementById('up-title').value.trim();
+  var content = document.getElementById('up-content').value.trim();
+  var et      = document.getElementById('up-examtype').value;
+  var source  = document.getElementById('up-source').value.trim();
+  var year    = document.getElementById('up-year').value;
+  var subj    = et==='AP' ? document.getElementById('up-subject').value : et;
+  if(!title||!content){ alert('Please fill in title and content.'); return; }
+  var posts = SS.posts;
+  posts.unshift({
+    id:Date.now(), title, content, author:Auth.current.name, authorId:Auth.current.id,
+    cat:subj, examType:et, subject:subj.replace('AP ',''),
+    tags:[et, subj], votes:1, comments:[], time:'Just now',
+    bookmarked:false, voted:1,
+    isPracticeTest: postType==='test',
+    isFRQ: postType==='frq',
+    testYear: postType!=='guide'?year:null,
+    testSource: source||'Community'
+  });
+  SS.posts = posts;
+  Auth.addXP(75);
+  closeModal();
+  renderExams();
+}
+
+updateTypeUI();
+renderExams();
+</script>
+</body>
+</html>

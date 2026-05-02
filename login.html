@@ -3,73 +3,62 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Acadence AI — Login</title>
+<title>Acadence — Sign In</title>
 <link rel="stylesheet" href="style.css"/>
 <style>
-  body { display:flex; align-items:center; justify-content:center; min-height:100vh; background:var(--bg); }
-  .auth-wrap { width:100%; max-width:420px; padding:20px; }
-  .auth-card { background:var(--card); border:1px solid var(--border2); border-radius:20px; padding:36px 32px; }
-  .auth-logo { display:flex; align-items:center; gap:10px; margin-bottom:28px; justify-content:center; }
-  .auth-logo-icon { width:40px; height:40px; background:linear-gradient(135deg,var(--accent),var(--accent3)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-weight:800; font-size:20px; color:#fff; }
-  .auth-logo-text { font-family:var(--display); font-weight:700; font-size:20px; }
-  .auth-title { font-family:var(--display); font-size:22px; font-weight:700; text-align:center; margin-bottom:4px; }
-  .auth-sub { font-size:13px; color:var(--text2); text-align:center; margin-bottom:24px; }
-  .auth-tabs { display:flex; background:var(--surface); border-radius:10px; padding:4px; margin-bottom:24px; }
-  .auth-tab { flex:1; padding:8px; text-align:center; font-size:13px; font-weight:500; border-radius:7px; cursor:pointer; color:var(--text2); transition:.15s; }
-  .auth-tab.active { background:var(--accent); color:#fff; }
-  .error-msg { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3); color:#fca5a5; border-radius:8px; padding:10px 14px; font-size:13px; margin-bottom:14px; display:none; }
-  .success-msg { background:rgba(16,185,129,.15); border:1px solid rgba(16,185,129,.3); color:#6ee7b7; border-radius:8px; padding:10px 14px; font-size:13px; margin-bottom:14px; display:none; }
-  .divider-text { text-align:center; font-size:12px; color:var(--text3); margin:16px 0; position:relative; }
-  .divider-text::before,.divider-text::after { content:''; position:absolute; top:50%; width:40%; height:1px; background:var(--border); }
-  .divider-text::before { left:0; } .divider-text::after { right:0; }
-  .admin-hint { margin-top:16px; padding:10px 14px; background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.2); border-radius:8px; font-size:12px; color:#fcd34d; text-align:center; }
+  body { display:flex; min-height:100vh; background:var(--bg); }
+  .login-left { width:420px; min-width:320px; background:var(--sidebar); display:flex; flex-direction:column; justify-content:space-between; padding:40px 36px; }
+  .login-right { flex:1; display:flex; align-items:center; justify-content:center; padding:40px; }
+  .auth-card { width:100%; max-width:400px; }
+  .auth-tabs { display:flex; background:var(--card2); border-radius:8px; padding:4px; margin-bottom:24px; }
+  .auth-tab { flex:1; padding:8px; text-align:center; font-size:13px; font-weight:500; border-radius:6px; cursor:pointer; color:var(--text2); transition:.12s; }
+  .auth-tab.active { background:var(--card); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,.1); }
+  .err { background:#fef2f2; border:1px solid #fecaca; color:var(--danger); border-radius:6px; padding:10px 14px; font-size:13px; margin-bottom:14px; display:none; }
+  .feature-item { display:flex; gap:12px; align-items:flex-start; margin-bottom:20px; }
+  .feature-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); margin-top:5px; flex-shrink:0; }
+  @media(max-width:680px) { .login-left { display:none; } }
 </style>
 </head>
 <body>
-<div class="auth-wrap">
-  <div class="auth-card">
-    <div class="auth-logo">
-      <div class="auth-logo-icon">A</div>
-      <span class="auth-logo-text">Acadence AI</span>
+<div class="login-left">
+  <div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:48px">
+      <div style="width:30px;height:30px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:15px;color:#fff">A</div>
+      <div style="font-family:var(--display);font-weight:600;font-size:16px;color:#fff">Acadence</div>
     </div>
+    <div style="font-family:var(--display);font-size:28px;font-weight:600;color:#fff;line-height:1.25;margin-bottom:16px">AP &amp; SAT/ACT prep, built for serious students.</div>
+    <div style="font-size:14px;color:#a8a29e;line-height:1.6;margin-bottom:36px">Everything you need to score higher — practice tests, AI tutoring, community strategies, and personalized study plans.</div>
+    <div class="feature-item"><div class="feature-dot"></div><div style="font-size:13px;color:#d6d3d1"><strong style="color:#fff">Cadence AI</strong> — AP and SAT/ACT specialized tutor</div></div>
+    <div class="feature-item"><div class="feature-dot"></div><div style="font-size:13px;color:#d6d3d1"><strong style="color:#fff">Exam Library</strong> — practice tests, FRQs, and scoring guides</div></div>
+    <div class="feature-item"><div class="feature-dot"></div><div style="font-size:13px;color:#d6d3d1"><strong style="color:#fff">Knowledge Hub</strong> — community strategies and explanations</div></div>
+    <div class="feature-item"><div class="feature-dot"></div><div style="font-size:13px;color:#d6d3d1"><strong style="color:#fff">Study Planner</strong> — countdown to your exam date</div></div>
+  </div>
+  <div style="font-size:12px;color:#57534e">Admin login: admin@acadence.ai / admin123</div>
+</div>
+
+<div class="login-right">
+  <div class="auth-card">
+    <div style="font-family:var(--display);font-size:22px;font-weight:600;margin-bottom:6px">Sign in to Acadence</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:24px">Track your prep, access the exam library, and study smarter.</div>
 
     <div class="auth-tabs">
-      <div class="auth-tab active" id="tab-login" onclick="showTab('login')">Log In</div>
-      <div class="auth-tab" id="tab-signup" onclick="showTab('signup')">Sign Up</div>
+      <div class="auth-tab active" id="tab-login"  onclick="showTab('login')">Log In</div>
+      <div class="auth-tab"        id="tab-signup" onclick="showTab('signup')">Sign Up</div>
     </div>
 
-    <!-- Login form -->
     <div id="login-form">
-      <div class="error-msg" id="login-error"></div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" type="email" id="login-email" placeholder="you@email.com" onkeydown="if(event.key==='Enter')doLogin()"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input class="form-input" type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/>
-      </div>
-      <button class="btn btn-primary" style="width:100%;padding:11px;font-size:14px;margin-top:4px" onclick="doLogin()">Log In →</button>
-      <div class="admin-hint">Admin demo: admin@acadence.ai / admin123</div>
+      <div class="err" id="login-err"></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="l-email" placeholder="you@email.com" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="l-pass" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button class="btn btn-primary" style="width:100%;padding:11px;font-size:14px" onclick="doLogin()">Log In</button>
     </div>
 
-    <!-- Signup form -->
     <div id="signup-form" style="display:none">
-      <div class="error-msg" id="signup-error"></div>
-      <div class="success-msg" id="signup-success"></div>
-      <div class="form-group">
-        <label class="form-label">Full Name</label>
-        <input class="form-input" type="text" id="signup-name" placeholder="Alex Kim" onkeydown="if(event.key==='Enter')doSignup()"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input class="form-input" type="email" id="signup-email" placeholder="you@email.com" onkeydown="if(event.key==='Enter')doSignup()"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input class="form-input" type="password" id="signup-pass" placeholder="At least 6 characters" onkeydown="if(event.key==='Enter')doSignup()"/>
-      </div>
-      <button class="btn btn-primary" style="width:100%;padding:11px;font-size:14px;margin-top:4px" onclick="doSignup()">Create Account →</button>
+      <div class="err" id="signup-err"></div>
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" type="text" id="s-name" placeholder="Your name" onkeydown="if(event.key==='Enter')doSignup()"/></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" id="s-email" placeholder="you@email.com" onkeydown="if(event.key==='Enter')doSignup()"/></div>
+      <div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="s-pass" placeholder="At least 6 characters" onkeydown="if(event.key==='Enter')doSignup()"/></div>
+      <button class="btn btn-primary" style="width:100%;padding:11px;font-size:14px" onclick="doSignup()">Create Account</button>
     </div>
   </div>
 </div>
@@ -77,7 +66,7 @@
 <script src="app.js"></script>
 <script>
   Auth.ensureAdmin();
-  if (Auth.isLoggedIn) window.location.href = 'index.html';
+  if (Auth.isLoggedIn) { window.location.href='index.html'; }
 
   function showTab(t) {
     document.getElementById('login-form').style.display  = t==='login'  ? 'block' : 'none';
@@ -85,33 +74,22 @@
     document.getElementById('tab-login').classList.toggle('active',  t==='login');
     document.getElementById('tab-signup').classList.toggle('active', t==='signup');
   }
-
+  function showErr(id, msg) { var el=document.getElementById(id); el.textContent=msg; el.style.display='block'; setTimeout(function(){el.style.display='none';},3500); }
   function doLogin() {
-    const email = document.getElementById('login-email').value.trim();
-    const pass  = document.getElementById('login-pass').value;
-    const err   = document.getElementById('login-error');
-    if (!email || !pass) { showErr(err, 'Please fill in all fields.'); return; }
-    if (Auth.login(email, pass)) { window.location.href = 'index.html'; }
-    else { showErr(err, 'Incorrect email or password.'); }
+    var email=document.getElementById('l-email').value.trim();
+    var pass=document.getElementById('l-pass').value;
+    if(!email||!pass){showErr('login-err','Please fill in all fields.');return;}
+    if(Auth.login(email,pass)){window.location.href='index.html';}else{showErr('login-err','Incorrect email or password.');}
   }
-
   function doSignup() {
-    const name  = document.getElementById('signup-name').value.trim();
-    const email = document.getElementById('signup-email').value.trim();
-    const pass  = document.getElementById('signup-pass').value;
-    const err   = document.getElementById('signup-error');
-    const ok    = document.getElementById('signup-success');
-    if (!name || !email || !pass) { showErr(err, 'Please fill in all fields.'); return; }
-    if (pass.length < 6) { showErr(err, 'Password must be at least 6 characters.'); return; }
-    const result = Auth.register(name, email, pass);
-    if (result === 'exists') { showErr(err, 'An account with that email already exists.'); return; }
-    if (result === true) { window.location.href = 'index.html'; }
-  }
-
-  function showErr(el, msg) {
-    el.textContent = msg;
-    el.style.display = 'block';
-    setTimeout(() => el.style.display = 'none', 3500);
+    var name=document.getElementById('s-name').value.trim();
+    var email=document.getElementById('s-email').value.trim();
+    var pass=document.getElementById('s-pass').value;
+    if(!name||!email||!pass){showErr('signup-err','Please fill in all fields.');return;}
+    if(pass.length<6){showErr('signup-err','Password must be at least 6 characters.');return;}
+    var r=Auth.register(name,email,pass);
+    if(r==='exists'){showErr('signup-err','An account with that email already exists.');}
+    else if(r===true){window.location.href='index.html';}
   }
 </script>
 </body>

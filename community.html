@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Acadence AI — Community</title>
+<title>Acadence — Knowledge Hub</title>
 <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -11,30 +11,49 @@
 <div class="main">
   <div class="page-header">
     <div>
-      <div class="page-title">Community Hub 🌐</div>
-      <div class="page-sub">Explore knowledge shared by learners worldwide</div>
+      <div class="page-title">Knowledge Hub</div>
+      <div class="page-sub">Community guides, strategies, and insights for AP &amp; SAT/ACT prep</div>
     </div>
-    <button class="btn btn-primary" onclick="openNewPost()">✍️ Create Post</button>
+    <button class="btn btn-primary btn-sm" onclick="openNewPost()">New Post</button>
   </div>
   <div class="page-content">
 
-    <!-- Filters -->
-    <div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
-      <div class="search-wrap">
-        <span class="search-icon">🔍</span>
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:18px;flex-wrap:wrap">
+      <div class="search-wrap" style="flex:1;max-width:340px">
+        <span class="search-icon">&#x2315;</span>
         <input type="text" id="search-input" placeholder="Search posts..." oninput="renderPosts()"/>
       </div>
       <div id="cat-filters" style="display:flex;gap:6px;flex-wrap:wrap"></div>
     </div>
 
-    <!-- Tabs -->
     <div class="tabs">
-      <div class="tab active" id="tab-newest" onclick="setTab('newest')">Newest</div>
-      <div class="tab" id="tab-top"    onclick="setTab('top')">Top Voted</div>
-      <div class="tab" id="tab-bookmarked" onclick="setTab('bookmarked')">Bookmarked</div>
+      <div class="tab active" id="tab-newest"    onclick="setTab('newest')">Newest</div>
+      <div class="tab"        id="tab-top"       onclick="setTab('top')">Top Voted</div>
+      <div class="tab"        id="tab-tests"     onclick="setTab('tests')">Practice Tests</div>
+      <div class="tab"        id="tab-bookmarked"onclick="setTab('bookmarked')">Saved</div>
     </div>
 
-    <div id="post-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    <div style="display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start">
+      <div id="post-list" style="display:flex;flex-direction:column;gap:8px"></div>
+
+      <!-- Sidebar info -->
+      <div style="display:flex;flex-direction:column;gap:14px;position:sticky;top:24px">
+        <div class="card">
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">Exam Resources</div>
+          <a href="exams.html?type=AP"  style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)"><span class="badge badge-amber">AP</span> AP Exam Library</a>
+          <a href="exams.html?type=SAT" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)"><span class="badge badge-blue">SAT</span> SAT Resources</a>
+          <a href="exams.html?type=ACT" style="display:flex;align-items:center;gap:8px;padding:8px 0;font-size:13px;color:var(--text2)"><span class="badge badge-green">ACT</span> ACT Resources</a>
+        </div>
+        <div class="card">
+          <div style="font-size:13px;font-weight:600;margin-bottom:10px">Top Contributors</div>
+          <div id="top-contributors"></div>
+        </div>
+        <div class="card-flat">
+          <div style="font-size:12px;font-weight:600;color:var(--text3);margin-bottom:6px">POSTING GUIDELINES</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.6">Be accurate and cite sources where possible. Practice test content should credit the original publisher. FRQ solutions should include scoring rubrics.</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -42,28 +61,32 @@
 <div id="new-post-modal" style="display:none" class="overlay">
   <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-header">
-      <div class="modal-title">Create New Post</div>
-      <button class="btn-icon" onclick="closeNewPost()">✕</button>
+      <div class="modal-title">Create a Post</div>
+      <button class="btn-icon" onclick="closeNewPost()">&#x2715;</button>
     </div>
     <div class="form-group">
-      <label class="form-label">Title</label>
-      <input class="form-input" id="np-title" placeholder="Enter a clear, specific title..."/>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Category</label>
-      <select class="form-input" id="np-cat">
-        <option>Science</option><option>Math</option><option>History</option><option>CS</option><option>English</option>
+      <label class="form-label">Exam Type</label>
+      <select class="form-input" id="np-examtype">
+        <option value="AP">AP Exam</option><option value="SAT">SAT</option><option value="ACT">ACT</option><option value="General">General Prep</option>
       </select>
     </div>
     <div class="form-group">
+      <label class="form-label">Subject / Category</label>
+      <input class="form-input" id="np-cat" placeholder="e.g. AP Biology, SAT Math, ACT Science..."/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input class="form-input" id="np-title" placeholder="Clear, specific title"/>
+    </div>
+    <div class="form-group">
       <label class="form-label">Content</label>
-      <textarea class="form-input" id="np-content" placeholder="Share your knowledge, question, or explanation..."></textarea>
+      <textarea class="form-input" id="np-content" style="min-height:140px" placeholder="Share strategies, explanations, notes, or exam content..."></textarea>
     </div>
     <div class="form-group">
       <label class="form-label">Tags (comma separated)</label>
-      <input class="form-input" id="np-tags" placeholder="e.g. AP Biology, Genetics, DNA"/>
+      <input class="form-input" id="np-tags" placeholder="e.g. FRQ, Unit 3, 2024"/>
     </div>
-    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+    <div style="display:flex;gap:10px;justify-content:flex-end">
       <button class="btn btn-ghost" onclick="closeNewPost()">Cancel</button>
       <button class="btn btn-primary" onclick="submitPost()">Publish Post</button>
     </div>
@@ -71,158 +94,133 @@
 </div>
 
 <!-- View Post Modal -->
-<div id="view-post-modal" style="display:none" class="overlay" onclick="closeViewPost()">
-  <div class="modal" id="view-post-content" onclick="event.stopPropagation()"></div>
+<div id="view-modal" style="display:none" class="overlay" onclick="closeViewPost()">
+  <div class="modal" id="view-content" onclick="event.stopPropagation()"></div>
 </div>
 
 <script src="app.js"></script>
 <script>
+if (!requireAuth()) throw 0;
 document.getElementById('sidebar-mount').innerHTML = buildSidebar('community');
-if (!requireAuth()) { throw 0; }
+trackTypingXP(document.getElementById('search-input'), 1);
 
-const cats = ['All','Science','Math','History','CS','English'];
-let activeCat = 'All';
-let activeTab = 'newest';
+var cats = ['All','AP','SAT','ACT','General'];
+var activeCat = 'All', activeTab = 'newest';
 
-// Category filter buttons
-document.getElementById('cat-filters').innerHTML = cats.map(c=>`
-  <button class="subject-pill ${c==='All'?'active':''}" id="cat-${c}" onclick="setCat('${c}')">${c}</button>`).join('');
+document.getElementById('cat-filters').innerHTML = cats.map(function(c){
+  return '<button class="subject-pill ' + (c==='All'?'active':'') + '" id="cat-'+c+'" onclick="setCat(\''+c+'\')">' + c + '</button>';
+}).join('');
 
 function setCat(c) {
   activeCat = c;
-  cats.forEach(x => document.getElementById('cat-'+x).classList.toggle('active', x===c));
-  renderPosts(); trackTypingXP(document.getElementById('search-input'), 1);
+  cats.forEach(function(x){ var b=document.getElementById('cat-'+x); if(b) b.classList.toggle('active',x===c); });
+  renderPosts();
 }
 
 function setTab(t) {
   activeTab = t;
-  ['newest','top','bookmarked'].forEach(x => {
-    document.getElementById('tab-'+x).classList.toggle('active', x===t);
+  ['newest','top','tests','bookmarked'].forEach(function(x){
+    document.getElementById('tab-'+x).classList.toggle('active',x===t);
   });
-  renderPosts(); trackTypingXP(document.getElementById('search-input'), 1);
+  renderPosts();
 }
 
 function renderPosts() {
-  const q = document.getElementById('search-input').value.toLowerCase();
-  let posts = SS.posts.slice();
-  if (activeCat !== 'All') posts = posts.filter(p => p.cat === activeCat);
-  if (q) posts = posts.filter(p => p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q));
-  if (activeTab === 'top') posts.sort((a,b) => b.votes - a.votes);
-  if (activeTab === 'bookmarked') posts = posts.filter(p => p.bookmarked);
+  var q = (document.getElementById('search-input').value||'').toLowerCase();
+  var posts = SS.posts.slice();
+  if (activeCat==='AP'||activeCat==='SAT'||activeCat==='ACT') posts = posts.filter(function(p){return p.examType===activeCat;});
+  else if (activeCat==='General') posts = posts.filter(function(p){return !p.examType||p.examType==='General';});
+  if (q) posts = posts.filter(function(p){return p.title.toLowerCase().indexOf(q)!==-1||p.content.toLowerCase().indexOf(q)!==-1;});
+  if (activeTab==='top')       posts.sort(function(a,b){return b.votes-a.votes;});
+  if (activeTab==='tests')     posts = posts.filter(function(p){return p.isPracticeTest;});
+  if (activeTab==='bookmarked')posts = posts.filter(function(p){return p.bookmarked;});
 
-  document.getElementById('post-list').innerHTML = posts.length
-    ? posts.map(postCardHTML).join('')
-    : '<div style="text-align:center;padding:48px;color:var(--text3)">No posts found.</div>';
+  document.getElementById('post-list').innerHTML = posts.length ? posts.map(postCardHTML).join('') : '<div style="padding:48px;text-align:center;color:var(--text3)">No posts match your filter.</div>';
 }
 
 function postCardHTML(p) {
-  return `
-  <div class="post-card" onclick="openPost(${p.id})">
-    <div class="vote-col">
-      <button class="vote-btn ${p.voted===1?'active-up':''}" onclick="event.stopPropagation();vote(${p.id},1)">▲</button>
-      <span class="vote-count">${p.votes}</span>
-      <button class="vote-btn ${p.voted===-1?'active-dn':''}" onclick="event.stopPropagation();vote(${p.id},-1)">▼</button>
-    </div>
-    <div class="post-body">
-      <div class="post-meta">
-        <span class="badge badge-${catColor(p.cat)}">${p.cat}</span>
-        ${p.tags.map(t=>`<span class="badge badge-gray">${t}</span>`).join('')}
-      </div>
-      <div class="post-title">${p.title}</div>
-      <div class="post-excerpt">${p.content}</div>
-      <div class="post-footer">
-        <span class="post-stat">👤 ${p.author}</span>
-        <span class="post-stat">💬 ${p.comments}</span>
-        <span class="post-stat">🕐 ${p.time}</span>
-        <button class="btn btn-ghost btn-sm" style="margin-left:auto;padding:3px 8px" onclick="event.stopPropagation();bookmark(${p.id})">${p.bookmarked?'🔖 Saved':'📌 Save'}</button>
-      </div>
-    </div>
-  </div>`;
+  var cmt = Array.isArray(p.comments)?p.comments.length:(p.comments||0);
+  return '<div class="post-card" onclick="openPost(' + p.id + ')">'
+    + '<div class="vote-col">'
+    + '<button class="vote-btn ' + (p.voted===1?'active-up':'') + '" onclick="event.stopPropagation();vote(' + p.id + ',1)">&#x25B2;</button>'
+    + '<span class="vote-count">' + p.votes + '</span>'
+    + '<button class="vote-btn ' + (p.voted===-1?'active-dn':'') + '" onclick="event.stopPropagation();vote(' + p.id + ',-1)">&#x25BC;</button>'
+    + '</div>'
+    + '<div class="post-body">'
+    + '<div class="post-meta">'
+    + '<span class="badge badge-' + catColor(p.cat) + '">' + (p.examType||'') + '</span>'
+    + '<span style="font-size:12px;color:var(--text2)">' + p.cat + '</span>'
+    + (p.isPracticeTest?'<span class="badge badge-orange">Practice Test</span>':'')
+    + '</div>'
+    + '<div class="post-title">' + p.title + '</div>'
+    + '<div class="post-excerpt">' + p.content + '</div>'
+    + '<div class="post-footer">'
+    + '<span class="post-stat">' + p.author + '</span>'
+    + '<span class="post-stat">' + cmt + ' comments</span>'
+    + '<span class="post-stat">' + p.time + '</span>'
+    + '<button class="btn btn-ghost btn-xs" style="margin-left:auto" onclick="event.stopPropagation();bookmark(' + p.id + ')">' + (p.bookmarked?'Saved':'Save') + '</button>'
+    + '</div></div></div>';
 }
 
-function vote(id, dir) {
-  const p = SS.posts.find(p=>p.id===id);
-  if (!p) return;
-  if (p.voted === dir) { p.votes -= dir; p.voted = 0; }
-  else { p.votes += dir - p.voted; p.voted = dir; }
-  SS.save(); renderPosts(); trackTypingXP(document.getElementById('search-input'), 1);
+function vote(id,dir) {
+  var posts=SS.posts, p=posts.find(function(p){return p.id===id;});
+  if(!p) return;
+  if(p.voted===dir){p.votes-=dir;p.voted=0;}else{p.votes+=dir-p.voted;p.voted=dir;}
+  SS.posts=posts; renderPosts();
+}
+function bookmark(id){
+  var posts=SS.posts, p=posts.find(function(p){return p.id===id;});
+  if(p){p.bookmarked=!p.bookmarked;SS.posts=posts;renderPosts();}
+}
+function openPost(id){
+  var p=SS.posts.find(function(p){return p.id===id;});
+  if(!p)return;
+  var cmt=Array.isArray(p.comments)?p.comments:[];
+  document.getElementById('view-content').innerHTML =
+    '<div class="modal-header"><div style="display:flex;gap:8px;align-items:center"><span class="badge badge-'+catColor(p.cat)+'">'+(p.examType||'')+'</span><span style="font-size:13px;color:var(--text2)">'+p.cat+'</span></div><button class="btn-icon" onclick="closeViewPost()">&#x2715;</button></div>'
+    +'<h2 style="font-family:var(--display);font-size:20px;font-weight:600;margin-bottom:8px;line-height:1.3">'+p.title+'</h2>'
+    +'<div style="font-size:13px;color:var(--text3);margin-bottom:16px">By '+p.author+' &middot; '+p.time+' &middot; &#x25B2; '+p.votes+'</div>'
+    +'<div style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px;white-space:pre-wrap">'+p.content+'</div>'
+    +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">'+(p.tags||[]).map(function(t){return '<span class="badge badge-gray">'+t+'</span>';}).join('')+'</div>'
+    +'<hr class="divider"/>'
+    +'<div style="font-size:13px;font-weight:600;margin-bottom:12px">Comments ('+cmt.length+')</div>'
+    +cmt.map(function(c){return '<div style="display:flex;gap:10px;margin-bottom:12px"><div class="avatar" style="width:26px;height:26px;font-size:10px;flex-shrink:0">'+(c.author||'?').slice(0,2).toUpperCase()+'</div><div><div style="font-size:12px;font-weight:500">'+c.author+' <span style="color:var(--text3);font-weight:400">'+(c.time||'')+'</span></div><div style="font-size:13px;color:var(--text2);margin-top:2px">'+c.text+'</div></div></div>';}).join('')
+    +'<div style="display:flex;gap:8px;margin-top:12px"><input class="form-input" id="cmt-inp-'+p.id+'" placeholder="Add a comment..." style="flex:1"/><button class="btn btn-primary btn-sm" onclick="addComment('+p.id+')">Post</button></div>';
+  document.getElementById('view-modal').style.display='flex';
+}
+function addComment(postId){
+  var inp=document.getElementById('cmt-inp-'+postId);
+  if(!inp||!inp.value.trim()) return;
+  var posts=SS.posts, p=posts.find(function(p){return p.id===postId;});
+  if(p){if(!Array.isArray(p.comments))p.comments=[];p.comments.push({author:Auth.current.name,text:inp.value.trim(),time:'just now'});SS.posts=posts;Auth.addXP(5);}
+  closeViewPost(); renderPosts();
+}
+function closeViewPost(){ document.getElementById('view-modal').style.display='none'; }
+function openNewPost()  { document.getElementById('new-post-modal').style.display='flex'; }
+function closeNewPost() { document.getElementById('new-post-modal').style.display='none'; }
+
+function submitPost(){
+  var title=document.getElementById('np-title').value.trim();
+  var content=document.getElementById('np-content').value.trim();
+  var et=document.getElementById('np-examtype').value;
+  var cat=document.getElementById('np-cat').value.trim()||et;
+  var tags=document.getElementById('np-tags').value.split(',').map(function(t){return t.trim();}).filter(Boolean);
+  if(!title||!content){alert('Please fill in title and content.');return;}
+  var posts=SS.posts;
+  posts.unshift({id:Date.now(),title,content,author:Auth.current.name,authorId:Auth.current.id,cat,examType:et,tags,votes:1,comments:[],time:'Just now',bookmarked:false,voted:1});
+  SS.posts=posts; Auth.addXP(50); closeNewPost(); renderPosts();
 }
 
-function bookmark(id) {
-  const p = SS.posts.find(p=>p.id===id);
-  if (p) { p.bookmarked = !p.bookmarked; SS.save(); renderPosts(); }
-}
+// Top contributors
+var users = Auth.getUsers().sort(function(a,b){return (b.xp||0)-(a.xp||0);}).slice(0,4);
+document.getElementById('top-contributors').innerHTML = users.map(function(u,i){
+  return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);' + (i===users.length-1?'border-bottom:none':'') + '">'
+    +'<div class="avatar" style="width:26px;height:26px;font-size:10px">'+(u.initials||'?')+'</div>'
+    +'<div style="flex:1;font-size:13px">'+u.name+'</div>'
+    +'<div style="font-size:11px;color:var(--text3)">'+(u.xp||0).toLocaleString()+' XP</div></div>';
+}).join('');
 
-function openPost(id) {
-  const p = SS.posts.find(p=>p.id===id);
-  if (!p) return;
-  document.getElementById('view-post-content').innerHTML = `
-    <div class="modal-header">
-      <span class="badge badge-${catColor(p.cat)}">${p.cat}</span>
-      <button class="btn-icon" onclick="closeViewPost()">✕</button>
-    </div>
-    <h2 style="font-family:var(--display);font-size:20px;font-weight:700;margin-bottom:10px;line-height:1.3">${p.title}</h2>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:16px">By ${p.author} · ${p.time} · ▲ ${p.votes}</div>
-    <div style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px">${p.content}</div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">${p.tags.map(t=>`<span class="badge badge-gray">${t}</span>`).join('')}</div>
-    <hr class="divider"/>
-    <div style="font-size:13px;font-weight:500;margin-bottom:12px">Comments (${p.comments})</div>
-    <div id="comments-list">
-      <div style="display:flex;gap:10px;margin-bottom:12px">
-        <div class="avatar" style="width:28px;height:28px;font-size:11px;flex-shrink:0">JM</div>
-        <div><div style="font-size:12px;font-weight:500">Jordan M. <span style="color:var(--text3);font-weight:400">1h ago</span></div>
-        <div style="font-size:13px;color:var(--text2);margin-top:2px">Great explanation! Really helped me understand the topic.</div></div>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <input class="form-input" id="comment-input" placeholder="Add a comment..." style="flex:1"/>
-      <button class="btn btn-primary btn-sm" onclick="addComment(${p.id})">Post</button>
-    </div>`;
-  document.getElementById('view-post-modal').style.display = 'flex';
-}
-
-function addComment(id) {
-  const inp = document.getElementById('comment-input');
-  const text = inp?.value.trim();
-  if (!text) return;
-  const p = SS.posts.find(p=>p.id===id);
-  if (p) p.comments++;
-  const list = document.getElementById('comments-list');
-  if (list) list.innerHTML += `
-    <div style="display:flex;gap:10px;margin-bottom:12px">
-      <div class="avatar" style="width:28px;height:28px;font-size:11px;flex-shrink:0">AK</div>
-      <div><div style="font-size:12px;font-weight:500">Alex Kim <span style="color:var(--text3);font-weight:400">Just now</span></div>
-      <div style="font-size:13px;color:var(--text2);margin-top:2px">${text}</div></div>
-    </div>`;
-  inp.value = '';
-  SS.save();
-}
-
-function closeViewPost() {
-  document.getElementById('view-post-modal').style.display = 'none';
-}
-
-function openNewPost() {
-  document.getElementById('new-post-modal').style.display = 'flex';
-}
-
-function closeNewPost() {
-  document.getElementById('new-post-modal').style.display = 'none';
-}
-
-function submitPost() {
-  const title   = document.getElementById('np-title').value.trim();
-  const cat     = document.getElementById('np-cat').value;
-  const content = document.getElementById('np-content').value.trim();
-  const tags    = document.getElementById('np-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
-  if (!title || !content) { alert('Please fill in title and content.'); return; }
-  SS.posts.unshift({ id: Date.now(), title, content, author:'Alex Kim', cat, tags, votes:1, comments:0, time:'Just now', bookmarked:false, voted:1 });
-  Auth.addXP(50);
-  closeNewPost();
-  renderPosts(); trackTypingXP(document.getElementById('search-input'), 1);
-}
-
-renderPosts(); trackTypingXP(document.getElementById('search-input'), 1);
+renderPosts();
 </script>
 </body>
 </html>
