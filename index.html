@@ -4,11 +4,11 @@
   Single self-contained file: paste this whole thing into any static
   page/host (its own .html file, GitHub Pages, Netlify, a "custom code"
   block, etc.) and it works with no build step and no server.
-
+ 
   Data lives in the browser's localStorage, per-browser. If you want it
   on your phone too, use the Export/Import buttons on the Classes tab
   to move a backup file between devices.
-
+ 
   One optional dependency: Google Fonts (IBM Plex). If that CDN is
   blocked on wherever you host this, it falls back to system fonts
   automatically — nothing breaks.
@@ -43,7 +43,7 @@
     --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
   }
-
+ 
   * { box-sizing: border-box; }
   html, body {
     margin: 0; padding: 0;
@@ -56,9 +56,9 @@
   }
   button, input, textarea { font-family: inherit; font-size: inherit; color: inherit; }
   h1, h2, h3, p { margin: 0; }
-
+ 
   .app { max-width: 860px; margin: 0 auto; padding: 0 24px 72px; min-height: 100vh; }
-
+ 
   .topbar {
     display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
     padding: 28px 0 20px;
@@ -66,7 +66,7 @@
     margin-bottom: 28px;
   }
   .brand { font-weight: 600; font-size: 19px; letter-spacing: -0.01em; }
-
+ 
   .tabs { display: flex; gap: 4px; background: var(--surface-2); padding: 3px; border-radius: 8px; }
   .tab {
     border: none; background: transparent; padding: 7px 16px; border-radius: 6px;
@@ -75,14 +75,14 @@
   }
   .tab.active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(20,30,26,0.10); }
   .tab:hover:not(.active) { color: var(--ink); }
-
+ 
   button:focus-visible, input:focus-visible, textarea:focus-visible, .day-card:focus-visible, .class-card:focus-visible {
     outline: 2px solid var(--accent); outline-offset: 2px;
   }
-
+ 
   .view { display: none; }
   .view.active { display: block; }
-
+ 
   /* ---- Date strip ---- */
   .date-strip { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
   .icon-btn {
@@ -92,32 +92,32 @@
     flex-shrink: 0;
   }
   .icon-btn:hover { border-color: var(--line-strong); color: var(--ink); }
-
+ 
   .date-display { flex: 1; display: flex; align-items: baseline; gap: 12px; min-width: 0; flex-wrap: wrap; }
   .weekday { font-size: 16px; color: var(--ink-soft); }
   .datenum { font-family: var(--font-mono); font-size: 34px; font-weight: 500; letter-spacing: -0.01em; }
-
+ 
   .btn-ghost {
     border: 1px solid var(--line); background: var(--surface); padding: 7px 14px; border-radius: var(--radius);
     font-size: 13.5px; font-weight: 500; cursor: pointer; color: var(--ink-soft); white-space: nowrap;
   }
   .btn-ghost:hover { border-color: var(--line-strong); color: var(--ink); }
-
+ 
   .btn-primary {
     border: 1px solid var(--accent); background: var(--accent); color: #fff; padding: 8px 16px;
     border-radius: var(--radius); font-size: 13.5px; font-weight: 500; cursor: pointer; white-space: nowrap;
   }
   .btn-primary:hover { background: var(--accent-ink); border-color: var(--accent-ink); }
-
+ 
   .btn-danger {
     border: 1px solid var(--danger); background: transparent; color: var(--danger); padding: 7px 14px;
     border-radius: var(--radius); font-size: 13.5px; font-weight: 500; cursor: pointer;
   }
   .btn-danger:hover { background: var(--danger-soft); }
-
+ 
   /* ---- Agenda ---- */
   .agenda-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px; }
-
+ 
   .day-card {
     display: block; width: 100%; text-align: left; font: inherit; color: inherit;
     background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--class-color, var(--accent));
@@ -138,9 +138,9 @@
   .day-card-hw { font-size: 14.5px; }
   .day-card-hw .label { color: var(--ink-faint); margin-right: 6px; }
   .day-card-empty { color: var(--ink-faint); font-size: 14px; }
-
+ 
   .section-heading { font-size: 14px; font-weight: 600; color: var(--ink-soft); margin: 0 0 14px; }
-
+ 
   .upcoming-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
   .upcoming-row {
     display: grid; grid-template-columns: 84px 1fr; gap: 16px; padding: 12px 0;
@@ -151,16 +151,16 @@
   .upcoming-item { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
   .upcoming-item .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .upcoming-item .cls { color: var(--ink-soft); font-size: 13px; }
-
+ 
   .empty-state { padding: 28px 0; color: var(--ink-faint); }
   .empty-state.bordered { border-top: 1px solid var(--line); padding-top: 20px; }
   button.link { color: var(--accent); background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; font-size: inherit; }
-
+ 
   /* ---- Classes ---- */
   .classes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
   .page-title { font-size: 20px; font-weight: 600; }
   .classes-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-
+ 
   .class-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
   .class-card {
     background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--class-color, var(--accent));
@@ -175,7 +175,7 @@
     font-size: 14px; font-weight: 500; cursor: pointer; min-height: 74px;
   }
   .add-class-card:hover { border-color: var(--accent); color: var(--accent); }
-
+ 
   /* ---- Modal ---- */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(20, 30, 26, 0.35);
@@ -188,7 +188,7 @@
     width: 100%; max-width: 720px; padding: 22px 26px 26px;
   }
   .modal-small { max-width: 400px; }
-
+ 
   .modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 4px; }
   .modal-title-row { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
   .class-name-input {
@@ -196,7 +196,7 @@
     padding: 4px 6px; border-radius: 5px; width: 100%; min-width: 0;
   }
   .class-name-input:hover, .class-name-input:focus { border-color: var(--line); background: var(--surface-2); }
-
+ 
   .color-swatch {
     width: 22px; height: 22px; border-radius: 50%; border: none; cursor: pointer; flex-shrink: 0;
     background: var(--class-color); box-shadow: 0 0 0 1px var(--line-strong);
@@ -205,25 +205,25 @@
   .color-picker[hidden] { display: none; }
   .color-picker .dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; padding: 0; }
   .color-picker .dot.selected { border-color: var(--ink); }
-
+ 
   .close-x { background: none; border: none; font-size: 20px; color: var(--ink-faint); cursor: pointer; padding: 2px 4px; line-height: 1; }
   .close-x:hover { color: var(--ink); }
-
+ 
   .field-label { font-size: 13px; font-weight: 500; color: var(--ink-soft); margin: 16px 0 6px; }
   .field-hint { font-size: 12px; color: var(--ink-faint); margin: 8px 0 0; }
-
+ 
   textarea.paste-box {
     width: 100%; min-height: 96px; border: 1px solid var(--line); border-radius: var(--radius);
     padding: 10px 12px; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.55; resize: vertical;
   }
   textarea.paste-box:focus { border-color: var(--accent); outline: none; }
-
+ 
   .parse-row { display: flex; justify-content: flex-end; margin-top: 8px; }
-
+ 
   .entries-block { margin-top: 20px; border-top: 1px solid var(--line); padding-top: 16px; }
   .entries-head { margin-bottom: 10px; }
   .entries-head h3 { font-size: 14px; font-weight: 600; }
-
+ 
   .entries-table-wrap { max-height: 320px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--radius); }
   .entries-table-head, .entry-row {
     display: grid; grid-template-columns: 136px 1fr 1fr 120px 28px; gap: 8px; align-items: center;
@@ -245,16 +245,16 @@
   .entry-row input[type="date"] { font-family: var(--font-mono); font-size: 12px; padding: 5px 2px; }
   .entry-row .row-delete { background: none; border: none; color: var(--ink-faint); cursor: pointer; font-size: 15px; padding: 4px; }
   .entry-row .row-delete:hover { color: var(--danger); }
-
+ 
   .add-entry-row { padding: 10px 8px; }
   .add-entry-row button { font-size: 13px; color: var(--accent); background: none; border: none; cursor: pointer; font-weight: 500; padding: 4px 0; }
   .add-entry-row button:hover { text-decoration: underline; }
-
+ 
   .modal-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
-
+ 
   .confirm-text { font-size: 14.5px; margin-bottom: 20px; }
   .confirm-actions { display: flex; justify-content: flex-end; gap: 10px; }
-
+ 
   @media (max-width: 640px) {
     .app { padding: 0 16px 56px; }
     .topbar { padding: 20px 0 16px; }
@@ -266,24 +266,78 @@
     .entry-row input[type="date"] { max-width: 160px; }
     .color-picker { padding-left: 0; }
   }
-
+ 
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; }
   }
+ 
+  /* ---- Auth screen ---- */
+  .auth-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .auth-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    box-shadow: var(--shadow-modal); width: 100%; max-width: 360px; padding: 28px 26px;
+  }
+  .auth-brand { font-weight: 600; font-size: 19px; margin-bottom: 20px; letter-spacing: -0.01em; }
+  .auth-tabs { display: flex; gap: 4px; background: var(--surface-2); padding: 3px; border-radius: 8px; margin-bottom: 20px; }
+  .auth-tab {
+    flex: 1; border: none; background: transparent; padding: 7px 0; border-radius: 6px;
+    font-size: 14px; font-weight: 500; color: var(--ink-soft); cursor: pointer;
+  }
+  .auth-tab.active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(20,30,26,0.10); }
+  .auth-label { display: block; font-size: 13px; font-weight: 500; color: var(--ink-soft); margin: 14px 0 6px; }
+  .auth-label:first-of-type { margin-top: 0; }
+  .auth-input {
+    width: 100%; border: 1px solid var(--line); border-radius: var(--radius); padding: 9px 12px; font-size: 14.5px;
+  }
+  .auth-input:focus { border-color: var(--accent); outline: none; }
+  .auth-error {
+    background: var(--danger-soft); color: var(--danger); font-size: 13px; padding: 8px 10px;
+    border-radius: var(--radius); margin-top: 14px;
+  }
+  .auth-submit { width: 100%; margin-top: 18px; padding: 10px 16px; }
+  .auth-note { font-size: 12px; color: var(--ink-faint); margin-top: 16px; line-height: 1.5; }
+ 
+  .account-status { display: flex; align-items: center; gap: 10px; }
+  .account-status .who { font-size: 13px; color: var(--ink-soft); }
 </style>
 </head>
 <body>
 <noscript><div style="padding:40px;text-align:center;color:#5B6663;">This tool needs JavaScript enabled to work.</div></noscript>
-
-<div class="app">
+ 
+<div id="authScreen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">Pacing</div>
+    <div class="auth-tabs">
+      <button type="button" class="auth-tab active" data-authtab="login" id="authTabLogin">Log in</button>
+      <button type="button" class="auth-tab" data-authtab="signup" id="authTabSignup">Sign up</button>
+    </div>
+    <form id="authForm" autocomplete="off">
+      <label class="auth-label" for="authUsername">Username</label>
+      <input type="text" id="authUsername" class="auth-input" autocomplete="username" required />
+      <label class="auth-label" for="authPassword">Password</label>
+      <input type="password" id="authPassword" class="auth-input" autocomplete="current-password" required />
+      <div id="authError" class="auth-error" hidden></div>
+      <button type="submit" class="btn-primary auth-submit" id="authSubmitBtn">Log in</button>
+    </form>
+    <p class="auth-note">Saved only in this browser, on this device — not synced to anywhere else, and not sent over the internet.</p>
+  </div>
+</div>
+ 
+<div class="app" id="appRoot" hidden>
   <header class="topbar">
     <div class="brand">Pacing</div>
     <nav class="tabs" role="tablist">
       <button class="tab active" data-tab="agenda" role="tab" aria-selected="true">Agenda</button>
       <button class="tab" data-tab="classes" role="tab" aria-selected="false">Classes</button>
     </nav>
+    <div class="account-status">
+      <span class="who" id="currentUserLabel"></span>
+      <button type="button" class="btn-ghost" id="logoutBtn">Log out</button>
+    </div>
   </header>
-
+ 
   <main>
     <section id="view-agenda" class="view active">
       <div class="date-strip">
@@ -295,13 +349,13 @@
         <button id="todayBtn" class="btn-ghost">Today</button>
         <button id="nextDay" class="icon-btn" aria-label="Next day">›</button>
       </div>
-
+ 
       <div id="agendaList" class="agenda-list"></div>
-
+ 
       <h2 class="section-heading">Upcoming</h2>
       <div id="upcomingList" class="upcoming-list"></div>
     </section>
-
+ 
     <section id="view-classes" class="view">
       <div class="classes-header">
         <h1 class="page-title">Your classes</h1>
@@ -316,21 +370,22 @@
     </section>
   </main>
 </div>
-
+ 
 <div id="modalOverlay" class="modal-overlay" hidden>
   <div class="modal" tabindex="-1"></div>
 </div>
-
+ 
 <div id="confirmOverlay" class="modal-overlay" hidden>
   <div class="modal modal-small" role="alertdialog" aria-modal="true"></div>
 </div>
-
+ 
 <script>
 (function () {
   'use strict';
-
+ 
   /* ============ Storage ============ */
-  var STORAGE_KEY = 'pacingAgendaData_v1';
+  var STORAGE_PREFIX = 'pacingAgendaData_v1_'; // + username = this user's data key
+  var STORAGE_KEY = null; // set once a user is logged in
   var memoryFallback = null;
   var usingLocalStorage = (function () {
     try {
@@ -340,7 +395,7 @@
       return true;
     } catch (e) { return false; }
   })();
-
+ 
   function loadData() {
     var raw = null;
     if (usingLocalStorage) {
@@ -351,7 +406,7 @@
     if (!raw) return null;
     try { return JSON.parse(raw); } catch (e) { return null; }
   }
-
+ 
   function saveData(data) {
     var raw = JSON.stringify(data);
     if (usingLocalStorage) {
@@ -361,21 +416,131 @@
       memoryFallback = raw;
     }
   }
-
+ 
+  /* ============ Accounts (local-only login/signup) ============
+     Everything here lives in this one browser's localStorage. There is no
+     server — signing up on one device does not create an account anywhere
+     else. Passwords are never stored in plain text: each one is combined
+     with a random per-account salt and run through SHA-256 (the browser's
+     built-in Web Crypto API) before being saved. That's solid practice for
+     a tool like this, but it is still ultimately client-side storage —
+     don't reuse a real/important password here. */
+  var ACCOUNTS_KEY = 'pacingAccounts_v1';
+  var SESSION_KEY = 'pacingCurrentUser_v1';
+ 
+  function loadAccounts() {
+    try { return JSON.parse(window.localStorage.getItem(ACCOUNTS_KEY)) || {}; }
+    catch (e) { return {}; }
+  }
+  function saveAccounts(accounts) {
+    window.localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+  }
+  function bufToHex(buf) {
+    return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+      return b.toString(16).padStart(2, '0');
+    }).join('');
+  }
+  function randomSalt() {
+    var arr = new Uint8Array(16);
+    window.crypto.getRandomValues(arr);
+    return bufToHex(arr);
+  }
+  function hashPassword(password, salt) {
+    var enc = new TextEncoder();
+    return window.crypto.subtle.digest('SHA-256', enc.encode(salt + ':' + password)).then(bufToHex);
+  }
+  function normalizeUsername(u) { return u.trim().toLowerCase(); }
+ 
+  function showAuthError(msg) {
+    var el = document.getElementById('authError');
+    el.textContent = msg;
+    el.hidden = false;
+  }
+  function clearAuthError() {
+    document.getElementById('authError').hidden = true;
+  }
+ 
+  var authMode = 'login'; // or 'signup'
+  var authTabLogin = document.getElementById('authTabLogin');
+  var authTabSignup = document.getElementById('authTabSignup');
+  var authSubmitBtn = document.getElementById('authSubmitBtn');
+  function setAuthMode(mode) {
+    authMode = mode;
+    clearAuthError();
+    authTabLogin.classList.toggle('active', mode === 'login');
+    authTabSignup.classList.toggle('active', mode === 'signup');
+    authSubmitBtn.textContent = mode === 'login' ? 'Log in' : 'Sign up';
+    document.getElementById('authPassword').autocomplete = mode === 'login' ? 'current-password' : 'new-password';
+  }
+  authTabLogin.addEventListener('click', function () { setAuthMode('login'); });
+  authTabSignup.addEventListener('click', function () { setAuthMode('signup'); });
+ 
+  document.getElementById('authForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    clearAuthError();
+    var rawUsername = document.getElementById('authUsername').value;
+    var username = normalizeUsername(rawUsername);
+    var password = document.getElementById('authPassword').value;
+    if (!username || !password) { showAuthError('Enter a username and password.'); return; }
+ 
+    var accounts = loadAccounts();
+ 
+    if (authMode === 'signup') {
+      if (accounts[username]) { showAuthError('That username is already taken on this device.'); return; }
+      if (password.length < 4) { showAuthError('Use at least 4 characters.'); return; }
+      var salt = randomSalt();
+      hashPassword(password, salt).then(function (hash) {
+        accounts[username] = { salt: salt, hash: hash };
+        saveAccounts(accounts);
+        logIn(username);
+      });
+    } else {
+      var account = accounts[username];
+      if (!account) { showAuthError('No account with that username on this device yet — sign up first.'); return; }
+      hashPassword(password, account.salt).then(function (hash) {
+        if (hash !== account.hash) { showAuthError('Wrong password.'); return; }
+        logIn(username);
+      });
+    }
+  });
+ 
+  function logIn(username) {
+    window.localStorage.setItem(SESSION_KEY, username);
+    startAppForUser(username);
+  }
+ 
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    window.localStorage.removeItem(SESSION_KEY);
+    document.getElementById('appRoot').hidden = true;
+    document.getElementById('authScreen').hidden = false;
+    document.getElementById('authForm').reset();
+    setAuthMode('login');
+  });
+ 
+  function startAppForUser(username) {
+    STORAGE_KEY = STORAGE_PREFIX + username;
+    state = loadData();
+    if (!state || !Array.isArray(state.classes)) state = seedData();
+    document.getElementById('currentUserLabel').textContent = username;
+    document.getElementById('authScreen').hidden = true;
+    document.getElementById('appRoot').hidden = false;
+    renderAgenda();
+  }
+ 
   function uid() {
     return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
   }
-
+ 
   var PALETTE = ['#5B7B9C', '#B0563E', '#6B7F52', '#7D5A8C', '#4A6670', '#8C5B4A', '#5C6B8C', '#9C6B7D'];
-
+ 
   function seedData() {
     var names = [
-      'AP Microeconomics',
-      'AP Computer Science Principles',
-      'Honors Chemistry',
-      'Honors Spanish III',
-      'Honors English II',
-      'Honors Algebra II/Trig'
+      'Math',
+      'Science',
+      'English',
+      'Language',
+      'Elective 1',
+      'Elective 2'
     ];
     return {
       classes: names.map(function (name, i) {
@@ -383,12 +548,11 @@
       })
     };
   }
-
-  var state = loadData();
-  if (!state || !Array.isArray(state.classes)) state = seedData();
-
+ 
+  var state = { classes: [] };
+ 
   function persist() { saveData(state); }
-
+ 
   /* ============ Date utils ============ */
   function pad2(n) { return String(n).padStart(2, '0'); }
   function isoLocal(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
@@ -408,9 +572,9 @@
     var d = parseIso(iso);
     return WEEKDAYS[d.getDay()].slice(0, 3) + ' ' + pad2(d.getMonth() + 1) + '/' + pad2(d.getDate());
   }
-
+ 
   var currentDate = isoLocal(new Date());
-
+ 
   /* ============ Parsing engine ============ */
   var MONTHS = {
     jan: 0, january: 0, feb: 1, february: 1, mar: 2, march: 2, apr: 3, april: 3,
@@ -419,7 +583,7 @@
   };
   var DAYNAME_RE = /^(mon|tue|tues|wed|weds|thu|thur|thurs|fri|sat|sun)[a-z]*\.?,?\s*[-\u2013\u2014:]?\s*/i;
   var EDGE_PUNCT_RE = /^[\s\-\u2013\u2014:,.]+|[\s\-\u2013\u2014:,.]+$/g;
-
+ 
   function schoolYearAnchor() {
     var today = new Date();
     var m = today.getMonth(); // 0-indexed
@@ -429,11 +593,11 @@
     var startYear = schoolYearAnchor();
     return month0 >= 6 ? startYear : startYear + 1;
   }
-
+ 
   function extractDate(raw) {
     var s = raw.trim().replace(DAYNAME_RE, '');
     var m, d, rest;
-
+ 
     m = s.match(/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/);
     if (m) {
       d = new Date(+m[1], +m[2] - 1, +m[3]);
@@ -442,7 +606,7 @@
         return { iso: isoLocal(d), rest: rest };
       }
     }
-
+ 
     m = s.match(/\b(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/);
     if (m) {
       var year = m[3] ? (m[3].length === 2 ? 2000 + (+m[3]) : +m[3]) : inferYear(+m[1] - 1);
@@ -452,7 +616,7 @@
         return { iso: isoLocal(d), rest: rest };
       }
     }
-
+ 
     m = s.match(/\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t)?(?:ember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,?\s*(\d{4}))?\b/i);
     if (m) {
       var month0 = MONTHS[m[1].toLowerCase()];
@@ -463,10 +627,10 @@
         return { iso: isoLocal(d), rest: rest };
       }
     }
-
+ 
     return null;
   }
-
+ 
   function splitColumns(line) {
     if (line.indexOf('\t') !== -1) {
       return line.split('\t').map(function (c) { return c.trim(); });
@@ -481,7 +645,7 @@
     if (multi.length > 1) return multi;
     return [line.trim()];
   }
-
+ 
   function rowToEntry(cols) {
     if (cols.length === 1) {
       var found1 = extractDate(cols[0]);
@@ -501,12 +665,12 @@
     var homework = rest.slice(1).join('; ') || '';
     return { id: uid(), date: date, topic: topic, homework: homework, note: '' };
   }
-
+ 
   function parsePastedGuide(text) {
     var lines = text.split('\n').map(function (l) { return l.trim(); }).filter(function (l) { return l.length > 0; });
     return lines.map(function (line) { return rowToEntry(splitColumns(line)); });
   }
-
+ 
   /* ============ Small helpers ============ */
   function escapeHtml(str) {
     var div = document.createElement('div');
@@ -522,18 +686,18 @@
     var avail = PALETTE.filter(function (c) { return used.indexOf(c) === -1; });
     return avail.length ? avail[0] : PALETTE[state.classes.length % PALETTE.length];
   }
-
+ 
   /* ============ Agenda rendering ============ */
   var weekdayLabel = document.getElementById('weekdayLabel');
   var dateNumLabel = document.getElementById('dateNumLabel');
   var agendaList = document.getElementById('agendaList');
   var upcomingList = document.getElementById('upcomingList');
-
+ 
   function renderAgenda() {
     weekdayLabel.textContent = formatWeekday(currentDate);
     dateNumLabel.textContent = formatBig(currentDate);
     agendaList.innerHTML = '';
-
+ 
     if (state.classes.length === 0) {
       var empty = document.createElement('div');
       empty.className = 'empty-state';
@@ -548,7 +712,7 @@
         card.type = 'button';
         card.className = 'day-card';
         card.style.setProperty('--class-color', cls.color);
-
+ 
         var noteBadge = entry && entry.note ? '<span class="badge-note">' + escapeHtml(entry.note) + '</span>' : '';
         var body;
         if (entry && (entry.topic || entry.homework)) {
@@ -561,7 +725,7 @@
         } else {
           body = '<div class="day-card-empty">No pacing guide entry for this date</div>';
         }
-
+ 
         card.innerHTML =
           '<div class="day-card-head">' +
           '<div class="day-card-head-left">' +
@@ -570,15 +734,15 @@
           '</div>' +
           '<span class="edit-hint">Edit</span>' +
           '</div>' + body;
-
+ 
         card.addEventListener('click', function () { openClassModal(cls.id); });
         agendaList.appendChild(card);
       });
     }
-
+ 
     renderUpcoming();
   }
-
+ 
   function renderUpcoming() {
     upcomingList.innerHTML = '';
     var any = false;
@@ -608,12 +772,12 @@
       upcomingList.innerHTML = '<div class="empty-state bordered">Nothing logged for the next few days yet.</div>';
     }
   }
-
+ 
   /* ============ Date nav + tabs ============ */
   document.getElementById('prevDay').addEventListener('click', function () { currentDate = addDays(currentDate, -1); renderAgenda(); });
   document.getElementById('nextDay').addEventListener('click', function () { currentDate = addDays(currentDate, 1); renderAgenda(); });
   document.getElementById('todayBtn').addEventListener('click', function () { currentDate = isoLocal(new Date()); renderAgenda(); });
-
+ 
   document.querySelectorAll('.tab').forEach(function (tab) {
     tab.addEventListener('click', function () {
       document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
@@ -623,10 +787,10 @@
       if (tab.dataset.tab === 'classes') renderClasses();
     });
   });
-
+ 
   /* ============ Classes grid ============ */
   var classGrid = document.getElementById('classGrid');
-
+ 
   function renderClasses() {
     classGrid.innerHTML = '';
     state.classes.forEach(function (cls) {
@@ -648,14 +812,14 @@
     addCard.addEventListener('click', openNewClassModal);
     classGrid.appendChild(addCard);
   }
-
+ 
   document.getElementById('addClassBtn').addEventListener('click', openNewClassModal);
-
+ 
   /* ============ Class edit modal ============ */
   var modalOverlay = document.getElementById('modalOverlay');
   var modalEl = modalOverlay.querySelector('.modal');
   var editingClassId = null;
-
+ 
   function openNewClassModal() {
     var cls = { id: uid(), name: '', color: nextColor(), entries: [] };
     state.classes.push(cls);
@@ -668,14 +832,14 @@
       if (nameInput) nameInput.focus();
     });
   }
-
+ 
   function openClassModal(id) {
     editingClassId = id;
     renderModal();
     modalOverlay.hidden = false;
     modalEl.focus();
   }
-
+ 
   function closeModal() {
     var cls = state.classes.find(function (c) { return c.id === editingClassId; });
     if (cls && !cls.name.trim() && cls.entries.length === 0) {
@@ -687,15 +851,15 @@
     renderClasses();
     renderAgenda();
   }
-
+ 
   function renderModal() {
     var cls = state.classes.find(function (c) { return c.id === editingClassId; });
     if (!cls) return;
-
+ 
     var colorDots = PALETTE.map(function (c) {
       return '<button type="button" class="dot' + (c === cls.color ? ' selected' : '') + '" data-color="' + c + '" style="background:' + c + '" aria-label="Set class color to ' + c + '"></button>';
     }).join('');
-
+ 
     modalEl.innerHTML =
       '<div class="modal-head">' +
       '<div class="modal-title-row">' +
@@ -705,11 +869,11 @@
       '<button type="button" class="close-x" id="closeModalBtn" aria-label="Close">&times;</button>' +
       '</div>' +
       '<div id="colorPicker" class="color-picker" hidden>' + colorDots + '</div>' +
-
+ 
       '<p class="field-label">Paste your pacing guide</p>' +
       '<textarea class="paste-box" id="pasteBox" placeholder="Paste rows from your syllabus or pacing guide — works best copied straight from a spreadsheet or table (tab- or pipe-separated), one entry per line, e.g.:&#10;9/8&#9;Kinematics review&#9;Problems 1-10&#10;9/9&#9;Intro to forces&#9;Read Ch. 4"></textarea>' +
       '<div class="parse-row"><button type="button" class="btn-primary" id="parseBtn">Parse &amp; add rows</button></div>' +
-
+ 
       '<div class="entries-block">' +
       '<div class="entries-head"><h3>Entries (' + cls.entries.length + ')</h3></div>' +
       '<div class="entries-table-wrap">' +
@@ -719,20 +883,20 @@
       '</div>' +
       '<p class="field-hint">Notes show up as a badge on the agenda — try things like &quot;Flipped,&quot; &quot;Quiz,&quot; or &quot;No school.&quot;</p>' +
       '</div>' +
-
+ 
       '<div class="modal-footer">' +
       '<button type="button" class="btn-danger" id="deleteClassBtn">Delete class</button>' +
       '<button type="button" class="btn-primary" id="doneBtn">Done</button>' +
       '</div>';
-
+ 
     renderEntryRows(cls);
     wireModalEvents(cls);
   }
-
+ 
   function sortedEntries(cls) {
     return cls.entries.slice().sort(function (a, b) { return (a.date || '').localeCompare(b.date || ''); });
   }
-
+ 
   function renderEntryRows(cls, highlightIds) {
     var container = modalEl.querySelector('#entryRows');
     var sorted = sortedEntries(cls);
@@ -749,12 +913,12 @@
       container.appendChild(row);
     });
   }
-
+ 
   function updateEntriesCount(cls) {
     var h3 = modalEl.querySelector('.entries-head h3');
     if (h3) h3.textContent = 'Entries (' + cls.entries.length + ')';
   }
-
+ 
   function rewireEntryRowEvents(cls) {
     var container = modalEl.querySelector('#entryRows');
     container.querySelectorAll('input').forEach(function (input) {
@@ -783,11 +947,11 @@
       });
     });
   }
-
+ 
   function wireModalEvents(cls) {
     modalEl.querySelector('#closeModalBtn').addEventListener('click', closeModal);
     modalEl.querySelector('#doneBtn').addEventListener('click', closeModal);
-
+ 
     modalEl.querySelector('#colorToggle').addEventListener('click', function () {
       var picker = modalEl.querySelector('#colorPicker');
       picker.hidden = !picker.hidden;
@@ -799,13 +963,13 @@
         renderModal();
       });
     });
-
+ 
     var nameInput = modalEl.querySelector('#classNameInput');
     nameInput.addEventListener('input', function () {
       cls.name = nameInput.value;
       persist();
     });
-
+ 
     modalEl.querySelector('#parseBtn').addEventListener('click', function () {
       var box = modalEl.querySelector('#pasteBox');
       var text = box.value;
@@ -820,7 +984,7 @@
       renderEntryRows(cls, ids);
       rewireEntryRowEvents(cls);
     });
-
+ 
     modalEl.querySelector('#addEntryBtn').addEventListener('click', function () {
       var entry = { id: uid(), date: currentDate, topic: '', homework: '', note: '' };
       cls.entries.push(entry);
@@ -829,7 +993,7 @@
       renderEntryRows(cls, new Set([entry.id]));
       rewireEntryRowEvents(cls);
     });
-
+ 
     modalEl.querySelector('#deleteClassBtn').addEventListener('click', function () {
       confirmAction('Delete "' + (cls.name || 'this class') + '"? This removes all ' + cls.entries.length + ' logged ' + (cls.entries.length === 1 ? 'entry' : 'entries') + '.', function () {
         state.classes = state.classes.filter(function (c) { return c.id !== cls.id; });
@@ -840,16 +1004,16 @@
         renderAgenda();
       });
     });
-
+ 
     rewireEntryRowEvents(cls);
   }
-
+ 
   modalOverlay.addEventListener('click', function (e) { if (e.target === modalOverlay) closeModal(); });
-
+ 
   /* ============ Confirm dialog ============ */
   var confirmOverlay = document.getElementById('confirmOverlay');
   var confirmEl = confirmOverlay.querySelector('.modal');
-
+ 
   function confirmAction(message, onConfirm) {
     confirmEl.innerHTML =
       '<p class="confirm-text">' + escapeHtml(message) + '</p>' +
@@ -862,14 +1026,14 @@
     confirmEl.querySelector('#confirmOk').addEventListener('click', function () { confirmOverlay.hidden = true; onConfirm(); });
   }
   confirmOverlay.addEventListener('click', function (e) { if (e.target === confirmOverlay) confirmOverlay.hidden = true; });
-
+ 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       if (!confirmOverlay.hidden) confirmOverlay.hidden = true;
       else if (!modalOverlay.hidden) closeModal();
     }
   });
-
+ 
   /* ============ Export / Import ============ */
   document.getElementById('exportBtn').addEventListener('click', function () {
     var blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
@@ -882,7 +1046,7 @@
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   });
-
+ 
   document.getElementById('importBtn').addEventListener('click', function () {
     document.getElementById('importFile').click();
   });
@@ -907,7 +1071,7 @@
     reader.readAsText(file);
     e.target.value = '';
   });
-
+ 
   /* ============ Init ============ */
   renderAgenda();
 })();
